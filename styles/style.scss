@@ -1,0 +1,47 @@
+/* ---------------------------- Utils ---------------------------- */
+@import "utils/variables";
+@import "utils/functions";
+@import "utils/mixins";
+
+/* ---------------------------- Base ----------------------------- */
+@import "base/fonts";
+@import "base/normalize";
+@import "base/common";
+
+/* -------------------------- Components ------------------------- */
+@import "components/timepicker";
+// @import "components/folder";
+// @import "components/icon";
+// @import "components/searchBar";
+// @import "components/table";
+// @import "components/dropdown";
+// @import "components/pwd";
+// @import "components/tag";
+// @import "components/modal";
+// @import "components/tab";
+// @import "components/switch";
+// @import "components/csvUpload";
+// @import "components/tooltip";
+
+/* --------------------------- Layout ---------------------------- */
+// @import "layout/layout";
+@import "layout/header";
+// @import "layout/navigation";
+// @import "layout/sidebar";
+// @import "layout/grid";
+// @import "layout/footer";
+// @import "layout/breadcrumb";
+
+/* ---------------------------- Pages ---------------------------- */
+// @import "pages/sources";
+// @import "pages/contact";
+
+/* --------------------------- Themes ---------------------------- */
+// @import "themes/default";
+// @import "themes/dark";
+
+/* --------------------------- Others ---------------------------- */
+// @import "other/other";
+
+/* -------------------------- Venders ------------------------- */
+// @import "~/node_modules/bootstrap/scss/bootstrap";

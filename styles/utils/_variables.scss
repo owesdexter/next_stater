@@ -1,0 +1,121 @@
+// Colors
+$Black: #323233;
+$White: #ffffff;
+
+$Mobile_Gray: #4e4e4f;
+$Card_Red: #ff80ab;
+$Card_Blue: #48a0ff;
+
+$Gray_Darkest: #3e3e40;
+$Gray_Darker: #89898a;
+$Gray_Dark: #c0c0c0;
+$Gray_Base: #c8c8c8;
+$Gray_Light: #e1e1e1;
+$Gray_Lighter: #ededed;
+$Gray_Lightest: #fafafa;
+
+$Blue_Darkest: #002437;
+$Blue_Darker: #00466d;
+$Blue_Dark: #006aa5;
+$Blue_Base: #008cd6;
+$Blue_Light: #00abe5;
+$Blue_Lighter: #62c7ee;
+$Blue_Lightest: #b4e3f6;
+$Blue_Base10: #e5f3fa;
+
+
+$Red_Darkest: #44140c;
+$Red_Darker: #862716;
+$Red_Dark: #c93a22;
+$Red_Base: #f55d3e;
+$Red_Light: #ff7d66;
+$Red_Lighter: #ffaa9a;
+$Red_Lightest: #ffd4cc;
+
+$Green_Darkest: #003416;
+$Green_Darker: #00672c;
+$Green_Dark: #009b42;
+$Green_Base: #00cc66;
+$Green_Light: #48da91;
+$Green_Lighter: #91e9bd;
+$Green_Lightest: #b6f0d3;
+
+$Orange_Darkest: #452800;
+$Orange_Darker: #884e00;
+$Orange_Dark: #cd7600;
+$Orange_Base: #ffa400;
+$Orange_Light: #ffb700;
+$Orange_Lighter: #ffcf72;
+$Orange_Lightest: #ffe7ba;
+
+$Yellow_Darkest: #413200;
+$Yellow_Darker: #826200;
+$Yellow_Dark: #c39300;
+$Yellow_Base: #f9c80e;
+$Yellow_Light: #ffd40f;
+$Yellow_Lighter: #ffe277;
+$Yellow_Lightest: #fff1bc;
+
+$VividNavy_Darkest: #001438;
+$VividNavy_Darker: #002570;
+$VividNavy_Dark: #0038a8;
+$VividNavy_Base: #0b4cd9;
+$VividNavy_Light: #2f79e9;
+$VividNavy_Lighter: #7aa6f2;
+$VividNavy_Lightest: #bcd3f8;
+
+$Purple_Darkest: #220a37;
+$Purple_Darker: #44126f;
+$Purple_Dark: #661ba7;
+$Purple_Base: #7d2ed7;
+$Purple_Light: #a85de8;
+$Purple_Lighter: #c793f1;
+$Purple_Lightest: #e3c9f7;
+
+$Pink_Darkest: #44121f;
+$Pink_Darker: #88223c;
+$Pink_Dark: #cc325b;
+$Pink_Base: #f7567c;
+$Pink_Light: #ff779b;
+$Pink_Lighter: #ffa5bd;
+$Pink_Lightest: #ffd2de;
+
+$Gradient_Blue_Base_To_VividNavy_Base: linear-gradient(to right, rgba(0,140,214,1) 0%, rgba(11,76,217,1) 100%);
+$Gradient_Blue_Base_Base_To_White: linear-gradient(to right,rgba(242,250,253,1) 0%, rgba(243,246,254,1) 100%);
+$Gradient_Blue_Base_To_Purple_Base: linear-gradient(to right, rgba(0,140,214,1) 0%, rgba(125,46,215,1) 100%);
+$Gradient_Blue_Base_To_VividNavy_Base_75: linear-gradient(to right, rgba(0,140,214,1) 0%, rgba(11,76,217,1) 65%,  rgba(225,225,225,1) 100%);
+
+@mixin dropdown-border {
+  border: 0.05208vmin solid transparent;
+  border-radius: 4px;
+  background-image: linear-gradient(#FFFFFF, #FFFFFF),
+                    linear-gradient(to right,#008cd6 0%, #7d2ed7 100%);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  box-shadow: 0px 2px 8px 0px rgba(0, 140, 214, 0.5);
+}
+
+/** BS5 Customed **/
+$primary: $Gray_Base;
+$secondary: $Blue_Base;
+$dark: $Gray_Darker;
+$bg_primary: $Gray_Lighter;
+$bg_dark: $Gray_Light;
+$bg_gradient_blue: linear-gradient(to right, #f2fafd 0%, #f3f6fe 100%);
+$font_primary: $Gray_Darker;
+$font_hover: $Blue_Base;
+$font_warn: $Red_Base;
+
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "dark": $dark,
+  "bg_primary": $bg_primary,
+  "bg_dark": $bg_dark,
+  "font_primary": $font_primary,
+  "font_hover": $font_hover
+);
+
+/** Padding **/
+$layout_padding_x: 1.5em;
+$layout_padding_y: 0.75em;
