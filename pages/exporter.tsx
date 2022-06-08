@@ -28,6 +28,12 @@ export default function PageExporter(){
   const prev = ()=>{
     setCurrentStep(pre=> pre - 1);
   }
+
+  const goStep = (value: number) => {
+    console.log('onChange:', value);
+    setCurrentStep(value);
+  };
+
   const done = ()=>{
     setCurrentStep(0);
 
@@ -58,7 +64,12 @@ export default function PageExporter(){
     <div className="page-exporter">
       <ExportContextProvider>
         <div className="step-bar-container">
-          <Steps current={currentStep}>
+          <Steps
+            current={currentStep}
+            type="navigation"
+            className="site-navigation-steps"
+            onChange={goStep}
+          >
             {steps.map(item => (
               <Step key={item} title={item} />
             ))}
@@ -69,6 +80,11 @@ export default function PageExporter(){
           </div>
 
           <div className="steps-action">
+            {currentStep > 0 && (
+              <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
+                Previous
+              </Button>
+            )}
             {currentStep < steps.length - 1 && (
               <Button type="primary" onClick={() => next()}>
                 Next
@@ -77,11 +93,6 @@ export default function PageExporter(){
             {currentStep === steps.length - 1 && (
               <Button type="primary" onClick={() => done()}>
                 Done
-              </Button>
-            )}
-            {currentStep > 0 && (
-              <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
-                Previous
               </Button>
             )}
           </div>
