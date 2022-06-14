@@ -4,18 +4,20 @@ import React, { ReactElement, useState, useMemo } from 'react';
 export interface ISpecialWorkHour {
   startDate: Date;
   hour: number;
-  type: string;
   reason: string;
   file?: string;
 }
 
 export interface IOvertime extends ISpecialWorkHour{
+  awardType: string
 }
 
 export interface IDayoff extends ISpecialWorkHour{
+  dayoffType: string
 }
 
 export interface IGeneralWorkTime {
+  targetMonth: number,
   startTime: Date;
   sd: number,
 }
@@ -29,8 +31,9 @@ export interface IExporterContext {
   setDayoff?: React.Dispatch<React.SetStateAction<IDayoff[]>>;
 }
 
-const defaultContextValue = {
+const defaultContextValue:IExporterContext = {
   generalWorkTime: {
+    targetMonth: new Date().getMonth()+1,
     startTime: new Date(),
     sd: 5,
   },

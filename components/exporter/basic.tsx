@@ -1,24 +1,64 @@
-import { TimePicker } from 'antd';
+import { TimePicker, Select, Input, InputNumber } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import type { Moment } from 'moment';
 import moment from 'moment';
 import { useState, useContext } from 'react';
-import { ExporterContext } from '../contextProvider/exporter'
+import { ExporterContext } from '../contextProvider/exporter';
+import { getAllMonth } from '../../constants';
+// import NumericalInput from '../numericalInput';
+const { Option } = Select;
+const selectableMonths = getAllMonth();
+// const thisMonth =
 
 export default function Basic(){
-  const [name, setName] = useState<string>('');
-  const [sd, setSd] = useState<string>('5');
-  const { generalWorkTime, setGeneralWorkTime } = useContext(ExporterContext)
+  const { generalWorkTime, setGeneralWorkTime } = useContext(ExporterContext);
+  const { sd, startTime, targetMonth } = generalWorkTime;
+  // const [name, setName] = useState<string>('');
+  // const [time, setTime] = useState<string>('');
+  // const [sd, setSd] = useState<number>(generalWorkTime.sd);
 
-  const handleTimeChange = (value: Moment | null, timeStr: string) => {
-    console.log('date', value);
-    // console.log('str', timeStr);
-
+  const handleMonthChange = (value: string) => {
+    if(setGeneralWorkTime){
+      setGeneralWorkTime({
+        ...generalWorkTime,
+        targetMonth: parseInt(value),
+      })
+    }
   };
 
-  const handleSdChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
-    const value = e.target.value;
-    console.log(value);
+  // const handleNameChange = (value: string) => {
+  //   if(setGeneralWorkTime){
+  //     setGeneralWorkTime({
+  //       ...generalWorkTime,
+  //       targetMonth: value,
+  //     })
+  //   }
+  // };
+
+  const handleTimeChange = (value: Moment | null, timeStr: string) => {
+    console.log('date', value, timeStr);
+    if(setGeneralWorkTime){
+      setGeneralWorkTime({
+        ...generalWorkTime,
+        startTime: value?.toDate() ?? new Date(),
+      })
+    }
+  };
+
+  const handleSdChange = (value: string)=>{
+    console.log(value)
+    // const float = parseFloat(value);
+    // const value = e.target.value;
+    if(setGeneralWorkTime){
+      setGeneralWorkTime({
+        ...generalWorkTime,
+        sd: parseInt(value)
+      })
+    }
   }
+  console.log('render')
+
+
 
   // const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
   //   const value = e.target.value;
@@ -29,8 +69,25 @@ export default function Basic(){
   return(
     <>
       <div>
+        <label htmlFor="">建立</label>
+        <Select data-testid="month-select-0" defaultValue={`${targetMonth}`} onChange={handleMonthChange}>
+          {selectableMonths?.map(el=>
+            <Option value={el} key={el}>{el}</Option>
+          )}
+        </Select>
+        <label htmlFor="">月工時表</label>
+      </div>
+      <div>
         <label htmlFor="">姓名</label>
-        <input
+        <Input
+          placeholder="__t_plz_enter_sth"
+          prefix={<UserOutlined />}
+          id="name-input-0-0"
+          data-testid="name-input-0-0"
+          value={''}
+          disabled
+        />
+        {/* <input
           type="text"
           id="name-input-0-0"
           data-testid="name-input-0-0"
@@ -38,20 +95,46 @@ export default function Basic(){
           value={name}
           placeholder="人員姓名"
           onChange={e=>{setName(e.target.value)}}
-        />
+        /> */}
       </div>
       <div>
         <label htmlFor="">上班時間</label>
         <TimePicker
           onChange={handleTimeChange}
           format={'HH:mm'}
-          defaultValue={moment('00:00', 'HH:mm')}
           minuteStep={5}
+          // defaultValue={moment(`${startTime.toLocaleTimeString()}`, 'HH:mm')}
+          defaultValue={moment('09:00', 'HH:mm')}
+          disabledTime={()=>({
+            disabledHours: ()=>[0, 1, 2, 3, 4, 5, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+          })}
+          // disabledHours={()=>[0, 1, 2, 3, 4, 5, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]}
         />
       </div>
       <div>
         <label htmlFor="sd-input-1-0">&plusmn;</label>
-        <input
+        <InputNumber
+          min="0"
+          // min={0}
+          max="55"
+          // max={55}
+          // defaultValue="5"
+          // defaultValue={5}
+          defaultValue={`${sd}`}
+          onChange={handleSdChange}
+          step={5}
+          data-testid="sd-input-1-0"
+        />
+        {/* <NumericalInput
+          value={sd}
+          maxLength={3}
+          max={8}
+          step={0.5}
+          validationReg={/[-+]?[0-8]?[\.5]?/}
+          data-testid="sd-input-1-0"
+          onChange={handleSdChange}
+        /> */}
+        {/* <input
           type="text"
           id="sd-input-1-0"
           data-testid="sd-input-1-0"
@@ -61,7 +144,7 @@ export default function Basic(){
           maxLength={2}
           placeholder="5"
           onChange={handleSdChange}
-        />
+        /> */}
         <label htmlFor="sd-input-1-0">分鐘</label>
       </div>
     </>

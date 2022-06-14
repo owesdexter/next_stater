@@ -8,7 +8,7 @@ export default function Preview(){
 
   const handleChange = (index:number)=>{
   }
-
+  console.log(useContext(ExporterContext))
   return(
     <>
       OverTime

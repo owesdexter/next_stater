@@ -2,6 +2,8 @@ import { useState } from 'react';
 import type { ReactElement } from 'react';
 import Layout from '../components/layout';
 // import StepBar from '../components/stepBar';
+// import NumericalInput from 'react-numerical-input';
+// import NumericalInput from '../components/numericalInput';
 import Basic from '../components/exporter/basic';
 import Overtime from '../components/exporter/overtime';
 import Dayoff from '../components/exporter/dayoff';
@@ -21,7 +23,7 @@ const steps = [
 
 export default function PageExporter(){
   // const { currentStep } = useContext(ExporterContext);
-  const [currentStep, setCurrentStep] = useState<number>(4);
+  const [currentStep, setCurrentStep] = useState<number>(0);
   const next = ()=>{
     setCurrentStep(pre=> pre + 1);
   }
@@ -30,7 +32,6 @@ export default function PageExporter(){
   }
 
   const goStep = (value: number) => {
-    console.log('onChange:', value);
     setCurrentStep(value);
   };
 
@@ -98,6 +99,14 @@ export default function PageExporter(){
           </div>
         </div>
       </ExportContextProvider>
+      {/* <NumericalInput
+        value={3}
+        onChange={value=>{console.log(value)}}
+        maxLength={4}
+        max={8}
+        validationReg={/[-+]?[0-8]?[\.5]?/}
+      /> */}
+      {/* <input type="text" maxLength={2}/> */}
     </div>
   )
 }
