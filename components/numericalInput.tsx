@@ -1,11 +1,9 @@
-import React, { useState, KeyboardEvent } from "react";
+import React, { useState, UIEvent } from "react";
 
 interface defaultHTMLInputAttr {
   value: number;
   max?: number;
   min?: number;
-  maxLength?: number;
-  // minLength?: number;
   placeholder?: string;
 }
 
@@ -13,31 +11,29 @@ export interface NumericalInputProps extends defaultHTMLInputAttr{
   validationReg?: RegExp;
   validationHint?: string;
   removeRuleReg?: string;
-  step?: number;
-  hasStepArrow?: boolean;
+  stepAdding?: {
+    step?: number;
+    hideStepArrow?: boolean;
+  }
+  // step?: number;
+  // hasStepArrow?: boolean;
   id?: string;
   onChange: (value: string) => any
 }
+let timer: ReturnType<typeof setTimeout>| null = null;
 
-export default function useNumericalInput({value, max, min, maxLength, validationReg, placeholder, id, onChange}: NumericalInputProps){
-  // const compId = id?? `numerical-input-${Math.floor(Math.random()*99)}`;
+export default function useNumericalInput({value, max, min, validationReg, placeholder, stepAdding, id, onChange}: NumericalInputProps){
   const [inputValue, setInputValue] = useState<string>(`${value}`);
-
-  // let inputValue = '';
-  // const setInputValue = (value: string)=>{
-  //   inputValue = value;
-  // }
+  const step = stepAdding?.step? stepAdding.step: 1;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
     const value = e?.target?.value ?? '';
     if(!value.match(/^[-+]?[0-9]+[.]?[0-9]*([eE][-+]?[0-9]+)?$/)){
-    // if(!value.match(/[\+\-]?([0-9]*[\.])?[0-9]+/)){
       console.log('float reg failed')
       setInputValue('');
       onChange('');
       return
     }
-
     if(validationReg && !value.match(validationReg)){
       console.log('REG Failed validation')
       setInputValue('');
@@ -60,27 +56,16 @@ export default function useNumericalInput({value, max, min, maxLength, validatio
     onChange(value);
   }
 
-  const handleKeyup = (e: KeyboardEvent<HTMLElement>)=>{
-    const keyUpValue = e.key;
-    if(!keyUpValue.match(/[0-9\.\+\-]/)){
-      console.log('KeyUP REG FAILED')
-      setInputValue('');
-      return
-    }
-  }
-
   return(
     <label htmlFor={id} className="numerical-input-wrapper">
       <input
-        type="text"
+        type="number"
         value={inputValue}
         name={id}
         id={id}
         placeholder={placeholder}
         onChange={handleInputChange}
-        onKeyUp={handleKeyup}
         className="numerical-input"
-        maxLength={maxLength}
         pattern="\d*"
       />
     </label>

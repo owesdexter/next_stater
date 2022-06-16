@@ -34,7 +34,12 @@ export interface IExporterContext {
 const defaultContextValue:IExporterContext = {
   generalWorkTime: {
     targetMonth: new Date().getMonth()+1,
-    startTime: new Date(),
+    startTime: (()=> {
+      const now = new Date();
+      now.setHours(9);
+      now.setMinutes(0);
+      return now}
+    )(),
     sd: 5,
   },
 }

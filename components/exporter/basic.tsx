@@ -1,14 +1,13 @@
 import { TimePicker, Select, Input, InputNumber } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+// import { UserOutlined } from '@ant-design/icons';
 import type { Moment } from 'moment';
 import moment from 'moment';
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { ExporterContext } from '../contextProvider/exporter';
 import { getAllMonth } from '../../constants';
-// import NumericalInput from '../numericalInput';
+import NumericalInput from '../numericalInput';
 const { Option } = Select;
 const selectableMonths = getAllMonth();
-// const thisMonth =
 
 export default function Basic(){
   const { generalWorkTime, setGeneralWorkTime } = useContext(ExporterContext);
@@ -46,7 +45,7 @@ export default function Basic(){
   };
 
   const handleSdChange = (value: string)=>{
-    console.log(value)
+    // console.log(value)
     // const float = parseFloat(value);
     // const value = e.target.value;
     if(setGeneralWorkTime){
@@ -56,15 +55,6 @@ export default function Basic(){
       })
     }
   }
-  console.log('render')
-
-
-
-  // const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
-  //   const value = e.target.value;
-  //   console.log(value);
-  //   setName(value);
-  // }
 
   return(
     <>
@@ -78,7 +68,7 @@ export default function Basic(){
         <label htmlFor="">月工時表</label>
       </div>
       <div>
-        <label htmlFor="">姓名</label>
+        {/* <label htmlFor="">姓名</label>
         <Input
           placeholder="__t_plz_enter_sth"
           prefix={<UserOutlined />}
@@ -86,7 +76,7 @@ export default function Basic(){
           data-testid="name-input-0-0"
           value={''}
           disabled
-        />
+        /> */}
         {/* <input
           type="text"
           id="name-input-0-0"
@@ -103,8 +93,8 @@ export default function Basic(){
           onChange={handleTimeChange}
           format={'HH:mm'}
           minuteStep={5}
-          // defaultValue={moment(`${startTime.toLocaleTimeString()}`, 'HH:mm')}
-          defaultValue={moment('09:00', 'HH:mm')}
+          defaultValue={moment(`${startTime.toLocaleTimeString()}`, 'HH:mm')}
+          // defaultValue={moment('09:00', 'HH:mm')}
           disabledTime={()=>({
             disabledHours: ()=>[0, 1, 2, 3, 4, 5, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
           })}
@@ -113,7 +103,7 @@ export default function Basic(){
       </div>
       <div>
         <label htmlFor="sd-input-1-0">&plusmn;</label>
-        <InputNumber
+        {/* <InputNumber
           min="0"
           // min={0}
           max="55"
@@ -124,16 +114,16 @@ export default function Basic(){
           onChange={handleSdChange}
           step={5}
           data-testid="sd-input-1-0"
-        />
-        {/* <NumericalInput
+        /> */}
+        <NumericalInput
           value={sd}
-          maxLength={3}
-          max={8}
-          step={0.5}
+          min={0}
+          max={55}
+          stepAdding={{step: 5, hideStepArrow:true}}
           validationReg={/[-+]?[0-8]?[\.5]?/}
           data-testid="sd-input-1-0"
           onChange={handleSdChange}
-        /> */}
+        />
         {/* <input
           type="text"
           id="sd-input-1-0"

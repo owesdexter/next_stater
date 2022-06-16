@@ -43,7 +43,6 @@ export default function PageExporter(){
     setTimeout(() => {
       message.success({ content: 'Reset!', key, duration: 2 });
     }, 1000);
-
   }
 
   const renderSwitch = (index:number)=>{
