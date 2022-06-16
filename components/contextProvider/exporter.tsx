@@ -1,19 +1,18 @@
 import React, { ReactElement, useState, useMemo } from 'react';
 
 // Define interfaces
-export interface ISpecialWorkHour {
+export interface ISpecialWorkTime {
   startDate: Date;
   hour: number;
+  type: string;
   reason: string;
   file?: string;
 }
 
-export interface IOvertime extends ISpecialWorkHour{
-  awardType: string
+export interface IOvertime extends ISpecialWorkTime{
 }
 
-export interface IDayoff extends ISpecialWorkHour{
-  dayoffType: string
+export interface IDayoff extends ISpecialWorkTime{
 }
 
 export interface IGeneralWorkTime {

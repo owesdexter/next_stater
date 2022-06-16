@@ -47,7 +47,6 @@ export default function Preview(){
       const workbook = new Excel.Workbook();
       await workbook.xlsx.load(res);
       setWorksheet(workbook.getWorksheet(getWorksheetName(generalWorkTime.targetMonth)));
-
       // const worksheet = workbook.getWorksheet(getWorksheetName(generalWorkTime.targetMonth));
       // console.log('1107', worksheet)
     })

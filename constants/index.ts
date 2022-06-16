@@ -1,4 +1,5 @@
-const thisYear = '111';
+const now = new Date();
+const thisYear = `${now.getFullYear()-1911}`;
 export const excelExampleFileName = 'timesheet/timesheet-example-111.xlsx';
 export const getAllMonth = ()=>{
   const arr = [];
@@ -14,4 +15,19 @@ export const getWorksheetName = (month: string | number)=>{
     monthValue = '0' + monthValue;
   }
   return thisYear + monthValue;
+}
+
+export interface IOptions {
+  title: string;
+  value: string;
+}
+
+export enum ESpecialWorkHour {
+  Overtime = 'overtime',
+  Dayoff = 'dayoff'
+}
+
+export enum EOvertimeAwardType {
+  Money = 'money',
+  Dayoff = 'dayoff'
 }

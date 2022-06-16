@@ -23,7 +23,7 @@ const steps = [
 
 export default function PageExporter(){
   // const { currentStep } = useContext(ExporterContext);
-  const [currentStep, setCurrentStep] = useState<number>(0);
+  const [currentStep, setCurrentStep] = useState<number>(1);
   const next = ()=>{
     setCurrentStep(pre=> pre + 1);
   }

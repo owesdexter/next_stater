@@ -1,4 +1,4 @@
-import { TimePicker, Select, Input, InputNumber } from 'antd';
+import { TimePicker, Select, InputNumber } from 'antd';
 // import { UserOutlined } from '@ant-design/icons';
 import type { Moment } from 'moment';
 import moment from 'moment';
@@ -57,8 +57,8 @@ export default function Basic(){
   }
 
   return(
-    <>
-      <div>
+    <div className="basic-step-container">
+      <div className="step-title-container">
         <label htmlFor="">建立</label>
         <Select data-testid="month-select-0" defaultValue={`${targetMonth}`} onChange={handleMonthChange}>
           {selectableMonths?.map(el=>
@@ -90,14 +90,13 @@ export default function Basic(){
       <div>
         <label htmlFor="">上班時間</label>
         <TimePicker
-          onChange={handleTimeChange}
           format={'HH:mm'}
           minuteStep={5}
           defaultValue={moment(`${startTime.toLocaleTimeString()}`, 'HH:mm')}
-          // defaultValue={moment('09:00', 'HH:mm')}
           disabledTime={()=>({
             disabledHours: ()=>[0, 1, 2, 3, 4, 5, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
           })}
+          onChange={handleTimeChange}
           // disabledHours={()=>[0, 1, 2, 3, 4, 5, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]}
         />
       </div>
@@ -137,6 +136,6 @@ export default function Basic(){
         /> */}
         <label htmlFor="sd-input-1-0">分鐘</label>
       </div>
-    </>
+    </div>
   )
 }
