@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useMemo } from 'react';
+import React, { ReactElement, useState, useMemo, useCallback } from 'react';
 
 // Define interfaces
 export interface ISpecialWorkTime {
@@ -23,11 +23,14 @@ export interface IGeneralWorkTime {
 
 export interface IExporterContext {
   generalWorkTime: IGeneralWorkTime;
-  overtime?: IOvertime[];
-  dayoff?: IDayoff[];
-  setGeneralWorkTime?: React.Dispatch<React.SetStateAction<IGeneralWorkTime>>;
-  setOvertime?: React.Dispatch<React.SetStateAction<IOvertime[]>>;
-  setDayoff?: React.Dispatch<React.SetStateAction<IDayoff[]>>;
+  overtime: IOvertime[];
+  dayoff: IDayoff[];
+  // setGeneralWorkTime?: React.Dispatch<React.SetStateAction<IGeneralWorkTime>>;
+  // setOvertime?: React.Dispatch<React.SetStateAction<IOvertime[]>>;
+  // setDayoff?: React.Dispatch<React.SetStateAction<IDayoff[]>>;
+  updateGeneralWorkTime: (value: IGeneralWorkTime)=>void
+  updateOvertime: (value: IOvertime[])=>void
+  updateDayoff: (value: IDayoff[])=>void
 }
 
 const defaultContextValue:IExporterContext = {
@@ -41,6 +44,17 @@ const defaultContextValue:IExporterContext = {
     )(),
     sd: 5,
   },
+  overtime: [],
+  dayoff: [],
+  updateGeneralWorkTime: (value: IGeneralWorkTime):void =>{
+    throw new Error('You probably forgot to put <ExporterContextProvider>.');
+  },
+  updateOvertime: (value: IOvertime[])=>{
+    throw new Error('You probably forgot to put <ExporterContextProvider>.');
+  },
+  updateDayoff: (value: IDayoff[])=>{
+    throw new Error('You probably forgot to put <ExporterContextProvider>.');
+  }
 }
 
 export const ExporterContext = React.createContext<IExporterContext>(defaultContextValue);
@@ -52,22 +66,34 @@ export default function ExportContextProvider({children}: any){
   const [overtime, setOvertime] = useState<IOvertime[]>([]);
   const [dayoff, setDayoff] = useState<IDayoff[]>([]);
 
+  const updateGeneralWorkTime = useCallback((value: IGeneralWorkTime)=>{
+    setGeneralWorkTime(value);
+  }, [setGeneralWorkTime]);
+
+  const updateOvertime = useCallback((value: IOvertime[])=>{
+    setOvertime(value);
+  }, [setOvertime]);
+
+  const updateDayoff = useCallback((value: IDayoff[])=>{
+    setDayoff(value);
+  }, [setDayoff]);
+
   const contextValue = useMemo<IExporterContext>(
     () => ({
       generalWorkTime,
       overtime,
       dayoff,
-      setGeneralWorkTime,
-      setOvertime,
-      setDayoff
+      updateGeneralWorkTime,
+      updateOvertime,
+      updateDayoff
     }),
     [
       generalWorkTime,
       overtime,
       dayoff,
-      setGeneralWorkTime,
-      setOvertime,
-      setDayoff
+      updateGeneralWorkTime,
+      updateOvertime,
+      updateDayoff
     ],
   );
 

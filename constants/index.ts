@@ -1,6 +1,6 @@
 const now = new Date();
 const thisYear = `${now.getFullYear()-1911}`;
-export const excelExampleFileName = 'timesheet/timesheet-example-111.xlsx';
+export const EXCEL_EXAMPLE_FILE_PATH = `timesheet/timesheet-example-${thisYear}.xlsx`;
 export const getAllMonth = ()=>{
   const arr = [];
   for(let i=1; i <=12; i++){
@@ -27,6 +27,24 @@ export enum ESpecialWorkHour {
   Dayoff = 'dayoff'
 }
 
+
+
+export const csrfTokenName = 'csrf_token';
+export const COMPANY_ID = 'essences';
+
+export enum ELeaveType {
+  Annual = 'annual',
+  Vaxxed = 'vaxxed',
+  Sick = 'sick',
+  Personal = 'personal',
+  FamilyCare = 'familycare',
+  Official = 'Official',
+  Marriage  = 'marriage ',
+  Funeral = 'funeral',
+  Paternity = 'paternity',
+}
+
+export const MONTHLY_OVERTIME_LIMIT = 46;
 export enum EOvertimeAwardType {
   Money = 'money',
   Dayoff = 'dayoff'

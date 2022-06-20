@@ -1,33 +1,48 @@
-import { useState, useContext } from 'react';
-import { ExporterContext } from '../contextProvider/exporter'
-import WorkTimeEditor from '../workTimeEditor';
-import { ESpecialWorkHour, EOvertimeAwardType } from '../../constants';
+import { useState, useContext, useEffect } from 'react';
+import { ExporterContext, ISpecialWorkTime } from '../contextProvider/exporter'
+import OverTimeEditor from '../overTimeEditor';
+import { ESpecialWorkHour, EOvertimeAwardType, MONTHLY_OVERTIME_LIMIT } from '../../constants';
 
 const overTimeOptions = [
   {
-    title: '__t_Overtime_pay',
+    title: '加班費',
     value: EOvertimeAwardType.Money,
   },
   {
-    title: '__t_Comp_time',
+    title: '補休',
     value: EOvertimeAwardType.Dayoff,
   },
 ]
 
 export default function Preview(){
-  // const { currentStep } = useContext(ExporterContext);
-  const [currentStep, set] = useState<number>(1);
-  const {  } = useContext(ExporterContext)
+  const { overtime, updateOvertime } = useContext(ExporterContext);
+  const [showMaxWarning, setShowMaxWarning] = useState<boolean>(false);
 
-  const handleChange = (index:number)=>{
+  const handleListChange = (list:ISpecialWorkTime[])=>{
+    updateOvertime(list);
   }
+
+  useEffect(()=>{
+    const total = overtime.reduce((acc, cur)=>acc + cur.hour, 0);
+    if(total > MONTHLY_OVERTIME_LIMIT){
+      setShowMaxWarning(true);
+    }
+  }, [overtime]);
+
   return(
     <div className="basic-step-container">
       <div className="step-title-container">新增加班</div>
-      <WorkTimeEditor
+      <OverTimeEditor
         type={ESpecialWorkHour.Overtime}
+        defaultHour={2}
+        maxHour={8}
         options={overTimeOptions}
+        defaultValue={overtime}
+        onChange={handleListChange}
       />
+      <ul className="warning-text-container">
+        {showMaxWarning?<li>{`每月加班不能超過 ${MONTHLY_OVERTIME_LIMIT} 小時!`}</li>:null}
+      </ul>
     </div>
   )
 }

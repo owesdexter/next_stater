@@ -4,33 +4,13 @@ import Excel from "exceljs";
 import { ref, getStorage, getBytes, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
 import { ExporterContext } from './contextProvider/exporter'
 import { storage } from '../pages/api/firebase';
-import { getWorksheetName, excelExampleFileName } from '../constants'
+import { getWorksheetName, EXCEL_EXAMPLE_FILE_PATH } from '../constants'
 
 export default function Preview(){
   // const { currentStep } = useContext(ExporterContext);
   const [worksheet, setWorksheet] = useState({});
   // const storage = getStorage();
-  const { generalWorkTime, setGeneralWorkTime } = useContext(ExporterContext);
-
-  // const getExample = async ()=>{
-  // }
-
-  // const requestFileUrl = (url:string)=>{
-  //   axios.get(url,{
-  //     responseType: 'arraybuffer',
-  //     withCredentials: true,
-  //     headers: {
-  //       'Access-Control-Allow-Origin': '*',
-  //       'Content-Type': 'application/json',
-  //     },
-  //   }
-  //   ).then(async res=>{
-  //     console.log(res.data)
-  //     const workbook = new Excel.Workbook();
-  //     await workbook.xlsx.readFile(res.data);
-  //     console.log(workbook)
-  //   });
-  // }
+  const { generalWorkTime } = useContext(ExporterContext);
 
   const handleChange = (index:number)=>{
   }
@@ -40,7 +20,7 @@ export default function Preview(){
     if(!generalWorkTime.targetMonth){
       return
     }
-    const starsRef = ref(storage, excelExampleFileName);
+    const starsRef = ref(storage, EXCEL_EXAMPLE_FILE_PATH);
     getBytes(starsRef)
     .then(async res => {
       // console.log(res);

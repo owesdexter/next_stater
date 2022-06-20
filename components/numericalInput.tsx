@@ -11,20 +11,15 @@ export interface NumericalInputProps extends defaultHTMLInputAttr{
   validationReg?: RegExp;
   validationHint?: string;
   removeRuleReg?: string;
-  stepAdding?: {
-    step?: number;
-    hideStepArrow?: boolean;
-  }
-  // step?: number;
-  // hasStepArrow?: boolean;
+  step?: number;
+  hideStepArrow?: boolean;
   id?: string;
   onChange: (value: string) => any
 }
 let timer: ReturnType<typeof setTimeout>| null = null;
 
-export default function useNumericalInput({value, max, min, validationReg, placeholder, stepAdding, id, onChange}: NumericalInputProps){
+export default function useNumericalInput({value, max, min, validationReg, placeholder, step=1, id, onChange}: NumericalInputProps){
   const [inputValue, setInputValue] = useState<string>(`${value}`);
-  const step = stepAdding?.step? stepAdding.step: 1;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
     const value = e?.target?.value ?? '';
