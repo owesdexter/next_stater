@@ -1,6 +1,6 @@
 import { useState, useEffect, MouseEventHandler } from 'react';
 import { ISpecialWorkTime, IOvertime } from './contextProvider/exporter';
-import { IOptions, ESpecialWorkHour } from '../constants';
+import { IOptions, ESpecialWorkHour, DAILY_OVERTIME_LIMIT } from '../constants';
 import { DatePicker, Select , Input, Space } from 'antd';
 import type { Moment } from 'moment';
 import { PlusCircleOutlined } from '@ant-design/icons';
@@ -81,7 +81,6 @@ export default function WorkTimeEditor({
       return
     }
     if(checkHasSameDate(value.toDate())>=0){
-
       return
     }
     const arr = [...list];
@@ -148,6 +147,7 @@ export default function WorkTimeEditor({
               <NumericalInput
                 value={el.hour}
                 max={maxHour}
+                maxWarningHint={`一天只能加 ${DAILY_OVERTIME_LIMIT} 小啦`}
                 onChange={(value)=>handleHourChange(value, el, index)}
               />
               <label htmlFor="">小時</label>

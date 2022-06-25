@@ -84,14 +84,15 @@ export default function Basic(){
           value={sd}
           min={0}
           max={55}
-          stepAdding={{step: 5, hideStepArrow:true}}
+          step={5}
+          hideStepArrow={true}
           validationReg={/[-+]?[0-8]?[\.5]?/}
           data-testid="sd-input-1-0"
           onChange={handleSdChange}
         />
         <label htmlFor="sd-input-1-0">分鐘</label>
       </div>
-      <ul className="warning-text-container">
+      <ul className="warning-hint-container">
         {showMaxWarning?<li>這樣會超過 9:30 喔!</li>:null}
         {showMinWarning?<li>你真的有這麼早到嗎</li>:null}
       </ul>

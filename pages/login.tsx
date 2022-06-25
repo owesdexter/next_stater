@@ -11,6 +11,7 @@ export default function PageLogin(){
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [isLogining, setIsLogining] = useState<boolean>(false);
 
+
   const router = useRouter();
 
   const loginAPI = ()=>{
@@ -19,14 +20,19 @@ export default function PageLogin(){
       memberId,
       password
     }
+    // console.log(data)
     axios({
-      url: '/api/login',
+      url: '/api/neuip/login',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      withCredentials: true,
       method: 'post',
-      data
+      data,
     })
     .then((res)=>{
       console.log(res.data)
-      router.push('/exporter');
+      router.push('/login');
     })
     .catch((err)=>{
       console.log(err);
@@ -37,16 +43,14 @@ export default function PageLogin(){
     });
   }
 
-  const handleLogin = async ()=>{
+  const handleLogin = ()=>{
     setIsLogining(true);
-    await loginAPI();
+    loginAPI();
   }
 
   useEffect(()=>{
-    axios('/api/preLogin')
+    axios('/api/neuip/preLogin')
     .then((res)=>{
-      console.log(res.data)
-      console.log()
     })
     .catch((err)=>{
       console.log(err);

@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import type { ReactElement } from 'react';
 import Layout from '../components/layout';
-// import StepBar from '../components/stepBar';
-// import NumericalInput from 'react-numerical-input';
-// import NumericalInput from '../components/numericalInput';
 import Basic from '../components/exporter/basic';
 import Overtime from '../components/exporter/overtime';
 import Dayoff from '../components/exporter/dayoff';
@@ -14,30 +11,38 @@ import { Button, message, Steps } from 'antd';
 const { Step } = Steps;
 
 const steps = [
-  '__t_General',
-  '__t_Overtime',
-  '__t_Dayoff',
-  '__t_Preview',
-  '__t_Export',
+  '基本',
+  '加班',
+  '請假',
+  '預覽',
+  '輸出',
 ]
 
 export default function PageExporter(){
-  // const { currentStep } = useContext(ExporterContext);
   const [currentStep, setCurrentStep] = useState<number>(1);
+  const [isProhibitedNext, setIsProhibitedNext] = useState<boolean>(false);
   const next = ()=>{
+    if(isProhibitedNext){
+      return
+    }
     setCurrentStep(pre=> pre + 1);
   }
   const prev = ()=>{
+    if(isProhibitedNext){
+      return
+    }
     setCurrentStep(pre=> pre - 1);
   }
 
   const goStep = (value: number) => {
+    if(isProhibitedNext){
+      return
+    }
     setCurrentStep(value);
   };
 
   const done = ()=>{
     setCurrentStep(0);
-
     const key = 'updatable';
     message.loading({ content: 'Resetting...', key });
     setTimeout(() => {
@@ -48,9 +53,9 @@ export default function PageExporter(){
   const renderSwitch = (index:number)=>{
     switch(index) {
       case 1:
-        return <Overtime />
+        return <Overtime onInvalid={setIsProhibitedNext}/>
       case 2:
-        return <Dayoff />
+        return <Dayoff onInvalid={setIsProhibitedNext}/>
       case 3:
         return <Preview />
       case 4:
@@ -98,14 +103,6 @@ export default function PageExporter(){
           </div>
         </div>
       </ExportContextProvider>
-      {/* <NumericalInput
-        value={3}
-        onChange={value=>{console.log(value)}}
-        maxLength={4}
-        max={8}
-        validationReg={/[-+]?[0-8]?[\.5]?/}
-      /> */}
-      {/* <input type="text" maxLength={2}/> */}
     </div>
   )
 }

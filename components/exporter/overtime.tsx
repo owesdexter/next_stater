@@ -13,8 +13,11 @@ const overTimeOptions = [
     value: EOvertimeAwardType.Dayoff,
   },
 ]
+ type TOvertimeProps = {
+  onInvalid?: React.Dispatch<React.SetStateAction<boolean>>;
+ }
 
-export default function Preview(){
+export default function Overtime({onInvalid}: TOvertimeProps){
   const { overtime, updateOvertime } = useContext(ExporterContext);
   const [showMaxWarning, setShowMaxWarning] = useState<boolean>(false);
 
@@ -24,10 +27,12 @@ export default function Preview(){
 
   useEffect(()=>{
     const total = overtime.reduce((acc, cur)=>acc + cur.hour, 0);
-    if(total > MONTHLY_OVERTIME_LIMIT){
-      setShowMaxWarning(true);
+    let value = total > MONTHLY_OVERTIME_LIMIT;
+    setShowMaxWarning(value);
+    if(onInvalid){
+      onInvalid(value);
     }
-  }, [overtime]);
+  }, [overtime, onInvalid]);
 
   return(
     <div className="basic-step-container">
@@ -40,7 +45,7 @@ export default function Preview(){
         defaultValue={overtime}
         onChange={handleListChange}
       />
-      <ul className="warning-text-container">
+      <ul className="warning-hint-container">
         {showMaxWarning?<li>{`每月加班不能超過 ${MONTHLY_OVERTIME_LIMIT} 小時!`}</li>:null}
       </ul>
     </div>

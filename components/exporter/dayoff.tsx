@@ -42,7 +42,11 @@ const dayoffOptions = [
   },
 ]
 
-export default function Preview(){
+type TDayoffProps = {
+  onInvalid?: React.Dispatch<React.SetStateAction<boolean>>;
+ }
+
+export default function Dayoff({onInvalid}: TDayoffProps){
   const { overtime, updateOvertime } = useContext(ExporterContext);
   const [showMaxWarning, setShowMaxWarning] = useState<boolean>(false);
 
@@ -61,7 +65,7 @@ export default function Preview(){
         defaultValue={overtime}
         onChange={handleListChange}
       />
-      {/* <ul className="warning-text-container">
+      {/* <ul className="warning-hint-container">
         {showMaxWarning?<li>{`每月加班不能超過 ${MONTHLY_OVERTIME_LIMIT} 小時!`}</li>:null}
       </ul> */}
     </div>

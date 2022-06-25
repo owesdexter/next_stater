@@ -4,6 +4,14 @@ const nextConfig = {
   reactStrictMode: true,
   sassOptions: {
     includePaths: [path.join(__dirname, 'styles')]
+  },
+  async rewrite(){
+    return [
+      {
+        source: '/api/neuip/:path*',
+        destination: 'https://cloud.nueip.com/neuip/:path'
+      }
+    ]
   }
 }
 

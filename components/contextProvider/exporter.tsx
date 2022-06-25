@@ -13,6 +13,7 @@ export interface IOvertime extends ISpecialWorkTime{
 }
 
 export interface IDayoff extends ISpecialWorkTime{
+  endtDate: Date;
 }
 
 export interface IGeneralWorkTime {

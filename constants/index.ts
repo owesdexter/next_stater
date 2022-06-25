@@ -45,6 +45,8 @@ export enum ELeaveType {
 }
 
 export const MONTHLY_OVERTIME_LIMIT = 46;
+export const DAILY_OVERTIME_LIMIT = 8;
+
 export enum EOvertimeAwardType {
   Money = 'money',
   Dayoff = 'dayoff'

@@ -1,4 +1,4 @@
-import React, { useState, UIEvent } from "react";
+import React, { useState } from "react";
 
 interface defaultHTMLInputAttr {
   value: number;
@@ -11,6 +11,7 @@ export interface NumericalInputProps extends defaultHTMLInputAttr{
   validationReg?: RegExp;
   validationHint?: string;
   removeRuleReg?: string;
+  maxWarningHint?: string;
   step?: number;
   hideStepArrow?: boolean;
   id?: string;
@@ -18,8 +19,9 @@ export interface NumericalInputProps extends defaultHTMLInputAttr{
 }
 let timer: ReturnType<typeof setTimeout>| null = null;
 
-export default function useNumericalInput({value, max, min, validationReg, placeholder, step=1, id, onChange}: NumericalInputProps){
+export default function useNumericalInput({value, max, min, validationReg, placeholder, step=1, maxWarningHint, id, onChange}: NumericalInputProps){
   const [inputValue, setInputValue] = useState<string>(`${value}`);
+  const [showMaxWarning, setShowMaxWarning] = useState<boolean>(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
     const value = e?.target?.value ?? '';
@@ -30,19 +32,19 @@ export default function useNumericalInput({value, max, min, validationReg, place
       return
     }
     if(validationReg && !value.match(validationReg)){
-      console.log('REG Failed validation')
       setInputValue('');
       onChange('');
       return
     }
     if(max && parseFloat(value)>max){
-      console.log('Maximum is: ', max)
       setInputValue(`${max}`);
+      setShowMaxWarning(true);
       onChange(`${max}`);
       return
+    }else {
+      setShowMaxWarning(false);
     }
     if(min && parseFloat(value)<min){
-      console.log('Minimum is: ', min)
       setInputValue(`${min}`);
       onChange(`${min}`);
       return
@@ -52,7 +54,7 @@ export default function useNumericalInput({value, max, min, validationReg, place
   }
 
   return(
-    <label htmlFor={id} className="numerical-input-wrapper">
+    <label htmlFor={id} className={`numerical-input-wrapper ${showMaxWarning? 'warning': ''}`}>
       <input
         type="number"
         value={inputValue}
@@ -63,6 +65,7 @@ export default function useNumericalInput({value, max, min, validationReg, place
         className="numerical-input"
         pattern="\d*"
       />
+      <span className="warning-hint-container">{maxWarningHint}</span>
     </label>
   )
 }
