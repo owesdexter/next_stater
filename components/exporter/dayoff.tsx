@@ -65,9 +65,6 @@ export default function Dayoff({onInvalid}: TDayoffProps){
         defaultValue={overtime}
         onChange={handleListChange}
       />
-      {/* <ul className="warning-hint-container">
-        {showMaxWarning?<li>{`每月加班不能超過 ${MONTHLY_OVERTIME_LIMIT} 小時!`}</li>:null}
-      </ul> */}
     </div>
   )
 }

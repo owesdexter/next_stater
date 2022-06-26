@@ -13,12 +13,9 @@ const overTimeOptions = [
     value: EOvertimeAwardType.Dayoff,
   },
 ]
- type TOvertimeProps = {
-  onInvalid?: React.Dispatch<React.SetStateAction<boolean>>;
- }
 
-export default function Overtime({onInvalid}: TOvertimeProps){
-  const { overtime, updateOvertime } = useContext(ExporterContext);
+export default function Overtime(){
+  const { overtime, updateOvertime, updateIsProhibitedNext } = useContext(ExporterContext);
   const [showMaxWarning, setShowMaxWarning] = useState<boolean>(false);
 
   const handleListChange = (list:ISpecialWorkTime[])=>{
@@ -29,10 +26,8 @@ export default function Overtime({onInvalid}: TOvertimeProps){
     const total = overtime.reduce((acc, cur)=>acc + cur.hour, 0);
     let value = total > MONTHLY_OVERTIME_LIMIT;
     setShowMaxWarning(value);
-    if(onInvalid){
-      onInvalid(value);
-    }
-  }, [overtime, onInvalid]);
+    updateIsProhibitedNext(value);
+  }, [overtime, updateIsProhibitedNext]);
 
   return(
     <div className="basic-step-container">
@@ -40,10 +35,12 @@ export default function Overtime({onInvalid}: TOvertimeProps){
       <OverTimeEditor
         type={ESpecialWorkHour.Overtime}
         defaultHour={2}
+        minHour={0}
         maxHour={8}
         options={overTimeOptions}
         defaultValue={overtime}
         onChange={handleListChange}
+        onInvalid={updateIsProhibitedNext}
       />
       <ul className="warning-hint-container">
         {showMaxWarning?<li>{`每月加班不能超過 ${MONTHLY_OVERTIME_LIMIT} 小時!`}</li>:null}

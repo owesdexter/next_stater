@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface defaultHTMLInputAttr {
   value: number;
@@ -12,31 +12,51 @@ export interface NumericalInputProps extends defaultHTMLInputAttr{
   validationHint?: string;
   removeRuleReg?: string;
   maxWarningHint?: string;
+  minWarningHint?: string;
   step?: number;
   hideStepArrow?: boolean;
   id?: string;
-  onChange: (value: string) => any
+  onChange: (value: string) => any;
+  onInvalid?: (value: boolean) => any | React.Dispatch<React.SetStateAction<boolean>>;
 }
 let timer: ReturnType<typeof setTimeout>| null = null;
 
-export default function useNumericalInput({value, max, min, validationReg, placeholder, step=1, maxWarningHint, id, onChange}: NumericalInputProps){
+export default function useNumericalInput({
+  value,
+  max,
+  min,
+  validationReg,
+  placeholder,
+  step=1,
+  maxWarningHint,
+  minWarningHint,
+  id,
+  onChange,
+  onInvalid}: NumericalInputProps){
+
   const [inputValue, setInputValue] = useState<string>(`${value}`);
   const [showMaxWarning, setShowMaxWarning] = useState<boolean>(false);
+  const [showMinWarning, setShowMinWarning] = useState<boolean>(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
     const value = e?.target?.value ?? '';
+    const parsedFloat = parseFloat(value);
+
+    // console.log(`parsedFloat: ${parsedFloat}; isNaN: ${isNaN(parsedFloat)}; ${(typeof min !== 'undefined' && parsedFloat<min)}` );
     if(!value.match(/^[-+]?[0-9]+[.]?[0-9]*([eE][-+]?[0-9]+)?$/)){
-      console.log('float reg failed')
+      console.log('float reg failed: ', value)
       setInputValue('');
       onChange('');
       return
     }
+
     if(validationReg && !value.match(validationReg)){
       setInputValue('');
       onChange('');
       return
     }
-    if(max && parseFloat(value)>max){
+
+    if(max && parsedFloat>max){
       setInputValue(`${max}`);
       setShowMaxWarning(true);
       onChange(`${max}`);
@@ -44,14 +64,25 @@ export default function useNumericalInput({value, max, min, validationReg, place
     }else {
       setShowMaxWarning(false);
     }
-    if(min && parseFloat(value)<min){
+
+    if((typeof min !== 'undefined' && parsedFloat<min) || !isNaN(parsedFloat)){
+      console.log('min excced',  parseFloat(value))
       setInputValue(`${min}`);
+      setShowMinWarning(true);
       onChange(`${min}`);
       return
+    }else {
+      setShowMinWarning(false);
     }
     setInputValue(value);
     onChange(value);
   }
+
+  useEffect(()=>{
+    if(onInvalid){
+      onInvalid((showMaxWarning && showMinWarning));
+    }
+  }, [showMaxWarning, showMinWarning, onInvalid])
 
   return(
     <label htmlFor={id} className={`numerical-input-wrapper ${showMaxWarning? 'warning': ''}`}>
@@ -65,7 +96,16 @@ export default function useNumericalInput({value, max, min, validationReg, place
         className="numerical-input"
         pattern="\d*"
       />
-      <span className="warning-hint-container">{maxWarningHint}</span>
+      {showMaxWarning && maxWarningHint?
+        <div className="warning-hint-container">
+          {maxWarningHint}
+        </div>
+      :null}
+      {showMinWarning && minWarningHint?
+        <div className="warning-hint-container">
+          {minWarningHint}
+        </div>
+      :null}
     </label>
   )
 }

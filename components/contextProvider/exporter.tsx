@@ -26,12 +26,14 @@ export interface IExporterContext {
   generalWorkTime: IGeneralWorkTime;
   overtime: IOvertime[];
   dayoff: IDayoff[];
+  isProhibitedNext: boolean;
   // setGeneralWorkTime?: React.Dispatch<React.SetStateAction<IGeneralWorkTime>>;
   // setOvertime?: React.Dispatch<React.SetStateAction<IOvertime[]>>;
   // setDayoff?: React.Dispatch<React.SetStateAction<IDayoff[]>>;
-  updateGeneralWorkTime: (value: IGeneralWorkTime)=>void
-  updateOvertime: (value: IOvertime[])=>void
-  updateDayoff: (value: IDayoff[])=>void
+  updateGeneralWorkTime: (value: IGeneralWorkTime)=>void;
+  updateOvertime: (value: IOvertime[])=>void;
+  updateDayoff: (value: IDayoff[])=>void;
+  updateIsProhibitedNext: (value: boolean)=>void;
 }
 
 const defaultContextValue:IExporterContext = {
@@ -47,6 +49,8 @@ const defaultContextValue:IExporterContext = {
   },
   overtime: [],
   dayoff: [],
+  isProhibitedNext: false,
+
   updateGeneralWorkTime: (value: IGeneralWorkTime):void =>{
     throw new Error('You probably forgot to put <ExporterContextProvider>.');
   },
@@ -54,6 +58,9 @@ const defaultContextValue:IExporterContext = {
     throw new Error('You probably forgot to put <ExporterContextProvider>.');
   },
   updateDayoff: (value: IDayoff[])=>{
+    throw new Error('You probably forgot to put <ExporterContextProvider>.');
+  },
+  updateIsProhibitedNext: (value: boolean)=>{
     throw new Error('You probably forgot to put <ExporterContextProvider>.');
   }
 }
@@ -66,6 +73,7 @@ export default function ExportContextProvider({children}: any){
   const [generalWorkTime, setGeneralWorkTime] = useState<IGeneralWorkTime>(defaultContextValue.generalWorkTime);
   const [overtime, setOvertime] = useState<IOvertime[]>([]);
   const [dayoff, setDayoff] = useState<IDayoff[]>([]);
+  const [isProhibitedNext, setIsProhibitedNext] = useState<boolean>(false);
 
   const updateGeneralWorkTime = useCallback((value: IGeneralWorkTime)=>{
     setGeneralWorkTime(value);
@@ -79,22 +87,30 @@ export default function ExportContextProvider({children}: any){
     setDayoff(value);
   }, [setDayoff]);
 
+  const updateIsProhibitedNext = useCallback((value: boolean)=>{
+    setIsProhibitedNext(value);
+  }, [setIsProhibitedNext]);
+
   const contextValue = useMemo<IExporterContext>(
     () => ({
       generalWorkTime,
       overtime,
       dayoff,
+      isProhibitedNext,
       updateGeneralWorkTime,
       updateOvertime,
-      updateDayoff
+      updateDayoff,
+      updateIsProhibitedNext
     }),
     [
       generalWorkTime,
       overtime,
       dayoff,
+      isProhibitedNext,
       updateGeneralWorkTime,
       updateOvertime,
-      updateDayoff
+      updateDayoff,
+      updateIsProhibitedNext
     ],
   );
 

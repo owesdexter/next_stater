@@ -16,10 +16,12 @@ interface IWorkTimeEditorProps<T>{
   options: IOptions[];
   defaultValue: T[];
   defaultHour: number,
+  minHour?: number,
   maxHour?: number,
   weeklyMaxHour?: number,
   monthlyMaxHour?: number
   onChange: (list: T[])=>void
+  onInvalid?: (value: boolean)=>void;
 }
 
 export default function WorkTimeEditor({
@@ -27,8 +29,10 @@ export default function WorkTimeEditor({
   options,
   defaultValue,
   defaultHour,
+  minHour,
   maxHour,
-  onChange
+  onChange,
+  onInvalid
 }: IWorkTimeEditorProps<ISpecialWorkTime>){
   class CSpecialWorkTime implements ISpecialWorkTime {
     startDate = new Date();
@@ -117,7 +121,7 @@ export default function WorkTimeEditor({
   };
 
   useEffect(()=>{
-    console.log('effect', list)
+    // console.log('effect', list)
     onChange(list);
   }, [list, onChange])
 
@@ -146,9 +150,12 @@ export default function WorkTimeEditor({
               </Select>
               <NumericalInput
                 value={el.hour}
+                min={minHour}
                 max={maxHour}
                 maxWarningHint={`一天只能加 ${DAILY_OVERTIME_LIMIT} 小啦`}
+                minWarningHint={`拜託不要亂填`}
                 onChange={(value)=>handleHourChange(value, el, index)}
+                onInvalid={onInvalid}
               />
               <label htmlFor="">小時</label>
             </div>

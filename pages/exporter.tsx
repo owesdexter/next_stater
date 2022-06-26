@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import type { ReactElement } from 'react';
 import Layout from '../components/layout';
 import Basic from '../components/exporter/basic';
 import Overtime from '../components/exporter/overtime';
-import Dayoff from '../components/exporter/dayoff';
+// import Dayoff from '../components/exporter/dayoff';
 import Preview from '../components/exporter/preview';
 import Output from '../components/exporter/output';
 import ExportContextProvider, { ExporterContext } from '../components/contextProvider/exporter';
@@ -13,14 +13,15 @@ const { Step } = Steps;
 const steps = [
   '基本',
   '加班',
-  '請假',
+  // '請假',
   '預覽',
   '輸出',
 ]
 
 export default function PageExporter(){
+  const { isProhibitedNext } = useContext(ExporterContext);
   const [currentStep, setCurrentStep] = useState<number>(1);
-  const [isProhibitedNext, setIsProhibitedNext] = useState<boolean>(false);
+  // const [isProhibitedNext, setIsProhibitedNext] = useState<boolean>(false);
   const next = ()=>{
     if(isProhibitedNext){
       return
@@ -28,9 +29,6 @@ export default function PageExporter(){
     setCurrentStep(pre=> pre + 1);
   }
   const prev = ()=>{
-    if(isProhibitedNext){
-      return
-    }
     setCurrentStep(pre=> pre - 1);
   }
 
@@ -53,12 +51,12 @@ export default function PageExporter(){
   const renderSwitch = (index:number)=>{
     switch(index) {
       case 1:
-        return <Overtime onInvalid={setIsProhibitedNext}/>
+        return <Overtime/>
+      // case 2:
+      //   return <Dayoff onInvalid={setIsProhibitedNext}/>
       case 2:
-        return <Dayoff onInvalid={setIsProhibitedNext}/>
-      case 3:
         return <Preview />
-      case 4:
+      case 3:
         return <Output />
       default:
         return <Basic />
@@ -80,9 +78,11 @@ export default function PageExporter(){
             ))}
           </Steps>
 
-          <div className="steps-content">
-            {renderSwitch(currentStep)}
-          </div>
+          <ExportContextProvider>
+            <div className="steps-coimage.pngntent">
+              {renderSwitch(currentStep)}
+            </div>
+          </ExportContextProvider>
 
           <div className="steps-action">
             {currentStep > 0 && (
