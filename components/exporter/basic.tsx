@@ -36,8 +36,8 @@ export default function Basic(){
   }
 
   useEffect(()=>{
-    const maxRef = generalWorkTime.startTime;
-    const minRef = generalWorkTime.startTime;
+    const maxRef = new Date(generalWorkTime.startTime.getTime());
+    const minRef = new Date(generalWorkTime.startTime.getTime());
     maxRef.setMinutes(maxRef.getMinutes()+sd);
     minRef.setMinutes(minRef.getMinutes()-sd);
 

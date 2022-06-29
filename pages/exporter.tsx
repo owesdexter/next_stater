@@ -64,27 +64,30 @@ export default function PageExporter(){
   }
 
   return(
-    <div className="page-exporter">
-      <ExportContextProvider>
-        <div className="step-bar-container">
-          <Steps
-            current={currentStep}
-            type="navigation"
-            className="site-navigation-steps"
-            onChange={goStep}
-          >
-            {steps.map(item => (
-              <Step key={item} title={item} />
-            ))}
-          </Steps>
+    <div className="page-exporter bs5-container">
+      {/* <ExportContextProvider> */}
+        {/* <div> */}
+          <div className="content">
+            <Steps
+              current={currentStep}
+              type="navigation"
+              direction="vertical"
+              className="site-navigation-steps step-bar-container"
+              onChange={goStep}
+            >
+              {steps.map(item => (
+                <Step key={item} title={item} />
+              ))}
+            </Steps>
 
-          <ExportContextProvider>
-            <div className="steps-coimage.pngntent">
-              {renderSwitch(currentStep)}
-            </div>
-          </ExportContextProvider>
+            <ExportContextProvider>
+              <div className="steps-coimage.pngntent">
+                {renderSwitch(currentStep)}
+              </div>
+            </ExportContextProvider>
+          </div>
 
-          <div className="steps-action">
+          <div className="footer steps-action">
             {currentStep > 0 && (
               <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
                 Previous
@@ -101,8 +104,8 @@ export default function PageExporter(){
               </Button>
             )}
           </div>
-        </div>
-      </ExportContextProvider>
+        {/* </div> */}
+      {/* </ExportContextProvider> */}
     </div>
   )
 }

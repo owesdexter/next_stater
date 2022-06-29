@@ -65,7 +65,7 @@ export default function useNumericalInput({
       setShowMaxWarning(false);
     }
 
-    if((typeof min !== 'undefined' && parsedFloat<min) || !isNaN(parsedFloat)){
+    if((typeof min !== 'undefined' && parsedFloat<min) || isNaN(parsedFloat)){
       console.log('min excced',  parseFloat(value))
       setInputValue(`${min}`);
       setShowMinWarning(true);

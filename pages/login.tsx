@@ -11,7 +11,6 @@ export default function PageLogin(){
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [isLogining, setIsLogining] = useState<boolean>(false);
 
-
   const router = useRouter();
 
   const loginAPI = ()=>{

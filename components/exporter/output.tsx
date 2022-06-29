@@ -1,6 +1,5 @@
 import { useState, useContext } from 'react';
 import { ExporterContext } from '../contextProvider/exporter'
-import ExcelEditor from '../excelEditor'
 
 export default function Preview(){
   // const { currentStep } = useContext(ExporterContext);
@@ -13,7 +12,6 @@ export default function Preview(){
 
   return(
     <>
-      <ExcelEditor />
       <a href="mailto:john@example.com">John</a>
     </>
   )

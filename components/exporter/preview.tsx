@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react';
 import { ExporterContext } from '../contextProvider/exporter'
+import ExcelEditor from '../excelEditor/worksheet'
 
 export default function Preview(){
   // const { currentStep } = useContext(ExporterContext);
@@ -11,6 +12,7 @@ export default function Preview(){
 
   return(
     <>
+      <ExcelEditor />
       Preview
     </>
   )
