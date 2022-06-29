@@ -3,6 +3,7 @@ import Excel from "exceljs";
 import type { Worksheet, CellValue, CellRichTextValue } from "exceljs";
 import { ref, getStorage, getBytes, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 import { ExporterContext } from '../contextProvider/exporter';
+import Row from './row';
 import { storage } from '../../pages/api/firebase/getFile';
 // import RowEditor from './content';
 import { getWorksheetName, EXCEL_EXAMPLE_FILE_PATH, ALL_ROWS_LENGTH } from '../../constants';
@@ -88,6 +89,7 @@ export default function Preview(){
         for(let i = 0; i<ALL_ROWS_LENGTH; i++){
           const values = worksheet.getRow(i).values as CellValue[];
           values.shift();
+
           if(i===1 || i===2){
             for(let j=0; j<values.length; j++){
               const index = values.indexOf(values[j]);
@@ -105,24 +107,8 @@ export default function Preview(){
                 titles.customerName = (`${values[j]}`).trim();
               }
             }
-            // setTitle(values);
-
-          // }else if(i===2){
-          //   setHeader(values);
 
           }else if(i===3){
-            // for(let j=0; j<values.length; j++){
-            //   if (
-            //     values[j] &&
-            //     typeof values[j] === 'object' &&
-            //     !Array.isArray(values[j])
-            //   ) {
-            //     const obj = values[j] as CellRichTextValue;
-            //     if(obj?.richText){
-            //       values[j] = obj.richText.reduce((pre, cur)=>pre + cur.text, '');
-            //     }
-            //   }
-            // }
             setThs(values);
 
           }else if(contentEnd){
@@ -139,7 +125,11 @@ export default function Preview(){
               contentEnd = true;
               continue;
             }
-
+            for(let j=0; j<values.length; j++){
+              if(!values[j]){
+                values[j] = '';
+              }
+            }
             content.push(values);
           }
         }
@@ -206,7 +196,7 @@ export default function Preview(){
       <table>
         <thead>
           <tr>
-            {ths.map(th=>{
+            {ths.map((th,idx)=>{
               if(
                 th &&
                 typeof th === 'object' &&
@@ -214,10 +204,10 @@ export default function Preview(){
               ){
                 const obj = th as CellRichTextValue;
                 return (
-                  <th>
+                  <th key={idx}>
                     {obj.richText.map(str=>(
                       <>
-                        <div>{str.text}</div>
+                        <div key={str.text}>{str.text}</div>
                       </>
                     ))}
                   </th>
@@ -229,7 +219,11 @@ export default function Preview(){
           </tr>
         </thead>
         <tbody>
-
+          {content?.map((row,idx)=>(
+            <>
+              <Row data={row}/>
+            </>
+          ))}
         </tbody>
       </table>
       {/* <RowEditor></RowEditor> */}
