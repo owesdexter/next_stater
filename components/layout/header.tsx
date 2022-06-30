@@ -1,5 +1,5 @@
 import Navs from './navs';
-export default function Layout() {
+export default function Header() {
   return (
     <div className="layout-header">
       <div>

@@ -1,4 +1,8 @@
-import React, { ReactElement, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import { ref, getBytes } from 'firebase/storage';
+import { storage } from '../../pages/api/firebase/getFile';
+import { getWorksheetName, EXCEL_EXAMPLE_FILE_PATH, ALL_ROWS_LENGTH } from '../../constants';
+import Excel from "exceljs";
 
 // Define interfaces
 export interface ISpecialWorkTime {
@@ -27,6 +31,7 @@ export interface IExporterContext {
   overtime: IOvertime[];
   dayoff: IDayoff[];
   isProhibitedNext: boolean;
+  worksheet?: Excel.Worksheet;
   // setGeneralWorkTime?: React.Dispatch<React.SetStateAction<IGeneralWorkTime>>;
   // setOvertime?: React.Dispatch<React.SetStateAction<IOvertime[]>>;
   // setDayoff?: React.Dispatch<React.SetStateAction<IDayoff[]>>;
@@ -34,7 +39,10 @@ export interface IExporterContext {
   updateOvertime: (value: IOvertime[])=>void;
   updateDayoff: (value: IDayoff[])=>void;
   updateIsProhibitedNext: (value: boolean)=>void;
+  updateWorksheet: (value: Excel.Worksheet)=>void;
 }
+
+
 
 const defaultContextValue:IExporterContext = {
   generalWorkTime: {
@@ -62,6 +70,9 @@ const defaultContextValue:IExporterContext = {
   },
   updateIsProhibitedNext: (value: boolean)=>{
     throw new Error('You probably forgot to put <ExporterContextProvider>.');
+  },
+  updateWorksheet: (value: Excel.Worksheet)=>{
+    throw new Error('You probably forgot to put <ExporterContextProvider>.');
   }
 }
 
@@ -74,6 +85,7 @@ export default function ExportContextProvider({children}: any){
   const [overtime, setOvertime] = useState<IOvertime[]>([]);
   const [dayoff, setDayoff] = useState<IDayoff[]>([]);
   const [isProhibitedNext, setIsProhibitedNext] = useState<boolean>(false);
+  const [worksheet, setWorksheet] = useState<Excel.Worksheet>();
 
   const updateGeneralWorkTime = useCallback((value: IGeneralWorkTime)=>{
     setGeneralWorkTime(value);
@@ -91,26 +103,69 @@ export default function ExportContextProvider({children}: any){
     setIsProhibitedNext(value);
   }, [setIsProhibitedNext]);
 
+  const updateWorksheet = useCallback((value: Excel.Worksheet)=>{
+    setWorksheet(value);
+  }, [setWorksheet]);
+
+  useEffect(()=>{
+    if(!generalWorkTime.targetMonth){
+      return
+    }
+    const starsRef = ref(storage, EXCEL_EXAMPLE_FILE_PATH);
+    getBytes(starsRef)
+    .then(async res => {
+      const workbook = new Excel.Workbook();
+      await workbook.xlsx.load(res);
+      const worksheet = workbook.getWorksheet(getWorksheetName(generalWorkTime.targetMonth));
+      setWorksheet(worksheet);
+    })
+    .catch((error) => {
+      // A full list of error codes is available at
+      // https://firebase.google.com/docs/storage/web/handle-errors
+      switch (error.code) {
+        case 'storage/object-not-found':
+          // File doesn't exist
+          break;
+        case 'storage/unauthorized':
+          // User doesn't have permission to access the object
+          break;
+        case 'storage/canceled':
+          // User canceled the upload
+          break;
+
+        // ...
+
+        case 'storage/unknown':
+          // Unknown error occurred, inspect the server response
+          break;
+      }
+    });
+  }, [generalWorkTime])
+
   const contextValue = useMemo<IExporterContext>(
     () => ({
       generalWorkTime,
       overtime,
       dayoff,
       isProhibitedNext,
+      worksheet,
       updateGeneralWorkTime,
       updateOvertime,
       updateDayoff,
-      updateIsProhibitedNext
+      updateIsProhibitedNext,
+      updateWorksheet
     }),
     [
       generalWorkTime,
       overtime,
       dayoff,
       isProhibitedNext,
+      worksheet,
       updateGeneralWorkTime,
       updateOvertime,
       updateDayoff,
-      updateIsProhibitedNext
+      updateIsProhibitedNext,
+      updateWorksheet
     ],
   );
 

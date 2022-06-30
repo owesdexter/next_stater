@@ -1,6 +1,6 @@
 const now = new Date();
-const thisYear = `${now.getFullYear()-1911}`;
-export const EXCEL_EXAMPLE_FILE_PATH = `timesheet/timesheet-example-${thisYear}.xlsx`;
+const thisROCYear = `${now.getFullYear()-1911}`;
+export const EXCEL_EXAMPLE_FILE_PATH = `timesheet/timesheet-example-${thisROCYear}.xlsx`;
 export const getAllMonth = ()=>{
   const arr = [];
   for(let i=1; i <=12; i++){
@@ -19,29 +19,61 @@ function monthExpression(month: string | number | undefined = now.getMonth()+1){
 
 export const getWorksheetName = (month: string | number)=>{
   // monthExpression(month);
-  return thisYear + monthExpression(month);
+  return thisROCYear + monthExpression(month);
 }
 
 export const ALL_ROWS_LENGTH = 41;
+export const ALL_COLUMNS_LENGTH = 10;
 
-// export const TIMESHEET_NAME = '易勝資訊人員工時表';
-// export const STAFF_NAME = '人員姓名';
-// export const CUSTOMER_UNIT_NAME = '客戶單位名稱';
-// export const STAFF_SIGNATURE = '員工簽名';
-// export const CUSTOMER_SIGNATURE = '客戶簽名確認';
+export enum ESpecialWorkHour {
+  Overtime = 'overtime',
+  Dayoff = 'dayoff'
+}
 
-// export const excelTitlesArr = [TIMESHEET_NAME, STAFF_NAME, CUSTOMER_UNIT_NAME];
-// export const excelFooterArr = [STAFF_SIGNATURE, CUSTOMER_SIGNATURE];
+export enum ELeaveType {
+  Annual = 'annual',
+  Vaxxed = 'vaxxed',
+  Sick = 'sick',
+  Personal = 'personal',
+  FamilyCare = 'familycare',
+  Official = 'Official',
+  Marriage  = 'marriage ',
+  Funeral = 'funeral',
+  Paternity = 'paternity',
+}
 
-// export enum ETimesheetTitle {
-//   TITLE = '易勝資訊人員工時表',
-//   STAFF_NAME = '人員姓名',
-//   CUSTOMER_UNIT_NAME = '客戶單位名稱',
-//   // STAFF_SIGNATURE = '員工簽名',
-//   // CUSTOMER_SIGNATURE = '客戶簽名確認',
-// }
+export enum EOvertimeAwardType {
+  Money = 'money',
+  Dayoff = 'dayoff'
+}
 
-// export enum ETimesheetFooter {
-//   STAFF_SIGNATURE = '員工簽名',
-//   CUSTOMER_SIGNATURE = '客戶簽名確認',
-// }
+export const MONTHLY_OVERTIME_LIMIT = 46;
+export const DAILY_OVERTIME_LIMIT = 8;
+
+export const fieldNames = {
+  TITLE: '易勝資訊人員工時表',
+  STAFF_NAME: '人員姓名',
+  CUSTOMER_NAME: '客戶單位名稱',
+  EXPECTED_WORKHOURS: '應計工時',
+  ABSENT_WORKHOURS: '缺勤時數',
+  ACTUAL_WORKHOURS: '實際工時',
+  LEAVE_WORKHOURS: '換休時數',
+  OVERTIME_WORKHOURS: '加班時數',
+  STAFF_SIGNATURE: '員工簽名',
+  CUSTOMER_SIGNATURE: '客戶簽名確認',
+}
+
+export enum ETimesheetFieldNames {
+  TITLE = '易勝資訊人員工時表',
+  STAFF_NAME = '人員姓名',
+  CUSTOMER_NAME = '客戶單位名稱',
+  EXPECTED_WORKHOURS = '應計工時',
+  ABSENT_WORKHOURS = '缺勤時數',
+  ACTUAL_WORKHOURS = '實際工時',
+  LEAVE_WORKHOURS = '換休時數',
+  OVERTIME_WORKHOURS = '加班時數',
+  STAFF_SIGNATURE = '員工簽名',
+  CUSTOMER_SIGNATURE = '客戶簽名確認',
+}
+
+
