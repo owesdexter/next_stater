@@ -3,40 +3,9 @@ import Excel from "exceljs";
 import type { Worksheet, CellValue, CellRichTextValue } from "exceljs";
 import { ref, getStorage, getBytes, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 import { ExporterContext } from '../contextProvider/exporter';
-import Row from './row';
+import Row, { TThIndexMapping } from './row';
 import { storage } from '../../pages/api/firebase/getFile';
-// import RowEditor from './content';
 import { getWorksheetName, EXCEL_EXAMPLE_FILE_PATH, ALL_ROWS_LENGTH } from '../../constants';
-
-// function arrayTrim<T>(arr: T[]):Promise<T[]> {
-//   return new Promise((resolve, reject) =>{
-//     const lastIndex = arr.length -1;
-//     console.log(lastIndex)
-
-//     if((lastIndex+1)){
-//       let needRecurse = false;
-//       // if(!arr[0] || (arr[0] && Array.isArray(arr[0]) && !arr[0].length)){
-//       if(!arr[0]){
-//         arr.shift();
-//         needRecurse = true;
-//       }
-//       // if(!arr[lastIndex] || (arr[lastIndex] && Array.isArray(arr[lastIndex]) && !arr[lastIndex].length)){
-//       if(!arr[lastIndex]){
-//         arr.pop();
-//         needRecurse = true;
-//       }
-
-//       if(needRecurse){
-//         arrayTrim(arr);
-//       }else{
-//         resolve(arr)
-//       }
-
-//     }else{
-//       resolve([])
-//     }
-//   })
-// }
 
 type TTitles = {
   date: string,
@@ -50,13 +19,20 @@ export default function Preview(){
   const [ths, setThs] = useState<CellValue[]>([]);
   const [content, setContent] = useState<CellValue[][]>([]);
   const [footers, setFooters] = useState<CellValue[][]>([]);
-  const { generalWorkTime } = useContext(ExporterContext);
+  const [indexMapping, setIndexMapping] = useState<TThIndexMapping>({
+    date: 0,
+    day: 1,
+    checkInTime: 2,
+    checkOutTime: 3,
+    normalWorkHours: 4,
+    note: 9,
+  });
 
+  const { generalWorkTime } = useContext(ExporterContext);
 
   const test = ()=>{
     console.log()
     console.log('title', titles)
-    // console.log('header', header)
     console.log('ths', ths)
     console.log('content', content)
     console.log('footer', footers)
@@ -109,6 +85,39 @@ export default function Preview(){
             }
 
           }else if(i===3){
+            for(let j=0; j<values.length; j++){
+              if (
+                values[j] &&
+                typeof values[j] === 'object' &&
+                !Array.isArray(values[j])
+              ) {
+                const obj = values[j] as CellRichTextValue;
+                if(obj?.richText){
+                  values[j] = obj.richText.reduce((pre, cur)=>pre + cur.text, '');
+                  if(`${values[j]}`.includes('日期')){
+                    setIndexMapping(pre=>({
+                      ...pre,
+                      date: j,
+                    }))
+                  }else if(`${values[j]}`.includes('星期')){
+                    setIndexMapping(pre=>({
+                      ...pre,
+                      day: j,
+                    }))
+                  }else if(`${values[j]}`.includes('正常')){
+                    setIndexMapping(pre=>({
+                      ...pre,
+                      normalWorkHours: j,
+                    }))
+                  }else if(`${values[j]}`.includes('備註')){
+                    setIndexMapping(pre=>({
+                      ...pre,
+                      note: j,
+                    }))
+                  }
+                }
+              }
+            }
             setThs(values);
 
           }else if(contentEnd){
@@ -161,25 +170,6 @@ export default function Preview(){
     });
   }, [generalWorkTime])
 
-  // useEffect(()=>{
-  //   if(!worksheet){
-  //     return
-  //   }
-  //   // console.lo  (worksheet.getRows(0, 40));
-  //   const rows = worksheet.getRows(0, 40);
-  //   const columns1 = worksheet.getColumn(1).values ;
-  //   const columns2 = worksheet.getColumn(2).values ;
-  //   console.log(columns1)
-  //   console.log(columns2)
-  //   if(rows?.length){
-  //     for(let i = 0; i<rows.length; i++){
-  //       console.log(rows[i].values);
-  //     }
-  //   }
-  //   // const row = worksheet.getRow(4).values;
-  //   // console.log(row)
-  // }, [worksheet])
-
   return(
     <div className="worksheet-container">
       <button onClick={test}>
@@ -193,35 +183,18 @@ export default function Preview(){
         <li className="staff-name">{titles?.staffName ? titles.staffName : ''}</li>
         <li className="customer-name">{titles?.customerName ? titles.customerName : ''}</li>
       </ul>
-      <table>
+      <table className="worksheet">
         <thead>
           <tr>
-            {ths.map((th,idx)=>{
-              if(
-                th &&
-                typeof th === 'object' &&
-                !Array.isArray(th)
-              ){
-                const obj = th as CellRichTextValue;
-                return (
-                  <th key={idx}>
-                    {obj.richText.map(str=>(
-                      <>
-                        <div key={str.text}>{str.text}</div>
-                      </>
-                    ))}
-                  </th>
-                )
-              }else {
-                return <th key={`${th}`}>{`${th}`}</th>
-              }
-            })}
+            {ths.map((th,idx)=>(
+              <th key={`${th}`} className="th">{`${th}`}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
           {content?.map((row,idx)=>(
             <>
-              <Row data={row}/>
+              <Row data={row} indexMapping={indexMapping} />
             </>
           ))}
         </tbody>

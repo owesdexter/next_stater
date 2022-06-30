@@ -20,7 +20,7 @@ const steps = [
 
 export default function PageExporter(){
   const { isProhibitedNext } = useContext(ExporterContext);
-  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [currentStep, setCurrentStep] = useState<number>(2);
   // const [isProhibitedNext, setIsProhibitedNext] = useState<boolean>(false);
   const next = ()=>{
     if(isProhibitedNext){

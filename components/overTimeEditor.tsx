@@ -1,4 +1,4 @@
-import { useState, useEffect, MouseEventHandler } from 'react';
+import { useState, useEffect } from 'react';
 import { ISpecialWorkTime, IOvertime } from './contextProvider/exporter';
 import { IOptions, ESpecialWorkHour, DAILY_OVERTIME_LIMIT } from '../constants';
 import { DatePicker, Select , Input, Space } from 'antd';
@@ -57,7 +57,6 @@ export default function WorkTimeEditor({
       el.startDate.toLocaleDateString() === date.toLocaleDateString()
     )
   }
-
 
   const createItem = (date:Date = new Date(), counter:number=0)=>{
     const index = checkHasSameDate(date);
