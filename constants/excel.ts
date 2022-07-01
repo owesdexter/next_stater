@@ -23,7 +23,74 @@ export const getWorksheetName = (month: string | number)=>{
 }
 
 export const ALL_ROWS_LENGTH = 41;
-export const ALL_COLUMNS_LENGTH = 10;
+export const ALL_COLUMNS_LENGTH = 11;
+
+export enum EThs {
+  Date = 'date',
+  Day = 'day',
+  CheckInTime = 'checkInTime',
+  CheckOutTime = 'checkOutTime',
+  NormalWorkHours = 'normalWorkHours',
+  AbsentHours = 'absentHours',
+  LeaveHours = 'leaveHours',
+  OverTimeHours = 'overTimeHours',
+  ActualHours = 'actualHours',
+  Note = 'note',
+};
+
+export interface ITh {
+  title: string,
+  keyName: EThs,
+  col: number
+}
+
+export const ThList:ITh[] = [
+  {
+    title: '日期',
+    keyName: EThs.Date,
+    col: 1
+  },
+  {
+    title: '開始',
+    keyName: EThs.CheckInTime,
+    col: 2
+  },
+  {
+    title: '結束',
+    keyName: EThs.CheckOutTime,
+    col: 2
+  },
+  {
+    title: '正常工時',
+    keyName: EThs.NormalWorkHours,
+    col: 3
+  },
+  {
+    title: '缺勤工時',
+    keyName: EThs.AbsentHours,
+    col: 4
+  },
+  {
+    title: '換休工時',
+    keyName: EThs.LeaveHours,
+    col: 5
+  },
+  {
+    title: '加班工時',
+    keyName: EThs.OverTimeHours,
+    col: 6
+  },
+  {
+    title: '實際工時',
+    keyName: EThs.ActualHours,
+    col: 7
+  },
+  {
+    title: '備註',
+    keyName: EThs.Note,
+    col: 8
+  },
+]
 
 export enum ESpecialWorkHour {
   Overtime = 'overtime',
@@ -77,3 +144,26 @@ export enum ETimesheetFieldNames {
 }
 
 
+// class CThList{
+//   constructor(
+//     private list: ITh[] = ThList
+//   ){}
+
+//   sortByCol(){
+//     this.list.sort((pre, cur)=>( pre.col - cur.col ));
+//   }
+
+//   findEl(keyword:string){
+//     this.list.find(el=>keyword.includes(el.title));
+//   }
+
+//   updateEl(title:string, keyword: string, keyname:string, value:string){
+//     const target = this.list.find(el=>keyword.includes(el.title));
+//     // const target = this.findEl(title);
+//     // type ObjectKey = keyof typeof ThList[0];
+//     if(target){
+//       target = value;
+//     }
+//   }
+
+// }

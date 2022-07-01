@@ -4,7 +4,7 @@ import moment from 'moment';
 import { TimePicker } from 'antd';
 import { useState, useEffect } from 'react';
 
-enum EThs {
+export enum EThs {
   Date = 'date',
   Day = 'day',
   CheckInTime = 'checkInTime',
