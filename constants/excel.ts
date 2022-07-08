@@ -39,56 +39,56 @@ export enum EThs {
 };
 
 export interface ITh {
-  title: string,
+  keyword: string,
   keyName: EThs,
-  col: number
+  // col: number
 }
 
-export const ThList:ITh[] = [
+export const thKeywordMappingList:ITh[] = [
   {
-    title: '日期',
+    keyword: '日期',
     keyName: EThs.Date,
-    col: 1
+    // col: 1
   },
   {
-    title: '開始',
+    keyword: '開始',
     keyName: EThs.CheckInTime,
-    col: 2
+    // col: 2
   },
   {
-    title: '結束',
+    keyword: '結束',
     keyName: EThs.CheckOutTime,
-    col: 2
+    // col: 2
   },
   {
-    title: '正常工時',
+    keyword: '正常',
     keyName: EThs.NormalWorkHours,
-    col: 3
+    // col: 3
   },
   {
-    title: '缺勤工時',
+    keyword: '缺勤',
     keyName: EThs.AbsentHours,
-    col: 4
+    // col: 4
   },
   {
-    title: '換休工時',
+    keyword: '換休',
     keyName: EThs.LeaveHours,
-    col: 5
+    // col: 5
   },
   {
-    title: '加班工時',
+    keyword: '加班',
     keyName: EThs.OverTimeHours,
-    col: 6
+    // col: 6
   },
   {
-    title: '實際工時',
+    keyword: '實際',
     keyName: EThs.ActualHours,
-    col: 7
+    // col: 7
   },
   {
-    title: '備註',
+    keyword: '備註',
     keyName: EThs.Note,
-    col: 8
+    // col: 8
   },
 ]
 
@@ -116,6 +116,19 @@ export enum EOvertimeAwardType {
 
 export const MONTHLY_OVERTIME_LIMIT = 46;
 export const DAILY_OVERTIME_LIMIT = 8;
+
+// export enum EThKeywords {
+//   Date = '日期',
+//   Day = '星期',
+//   CheckInTime = '開始',
+//   CheckOutTime = '結束',
+//   NormalWorkHours = '正常',
+//   AbsentHours = '缺勤',
+//   LeaveHours = '補休',
+//   OverTimeHours = '加班',
+//   ActualHours = '實際',
+//   Note = '備註',
+// };
 
 export const fieldNames = {
   TITLE: '易勝資訊人員工時表',
