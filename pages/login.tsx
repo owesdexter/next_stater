@@ -3,7 +3,6 @@ import { Input, Button, Space } from 'antd';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { COMPANY_ID } from '../constants';
-// import { getCookies } from 'cookies-next';
 
 
 export default function PageLogin(){
@@ -16,16 +15,13 @@ export default function PageLogin(){
 
   const loginAPI = ()=>{
     const data = {
-      company: COMPANY_ID,
       memberId,
       password
     }
-
-    // console.log(data)
     axios({
       url: '/api/neuip/login',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       withCredentials: true,
       method: 'post',

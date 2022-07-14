@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import express from 'express';
-import Cors from 'cors';
+import { COMPANY_ID } from '../../../constants';
+import { CNeuipRequestConfig } from '../../../http';
 import axios from 'axios';
-import { setCookies } from 'cookies-next';
+import qs from 'qs';
 
 interface userInfo{
   company: string,
@@ -12,89 +12,62 @@ interface userInfo{
   username: string,
 }
 
-const cors = Cors({
-  methods: ['GET', 'POST'],
-})
-
-function runCors(req: NextApiRequest, res: NextApiResponse<string>, fn:any) {
-  return new Promise((resolve, reject) => {
-    fn(req, res, (result:any) => {
-      if (result instanceof Error) {
-        return reject(result)
-      }
-
-      return resolve(result)
+const homeAPI = (reqCookie: string[])=>{
+  return new Promise((resolve, reject)=>{
+    const axiosConfig = new CNeuipRequestConfig(
+      '/home',
+      'get',
+      '',
+      reqCookie,
+    )
+    axios({
+      ...axiosConfig
     })
+    .then((response)=>{
+      const token = JSON.stringify(response).match(/<input type="hidden" name="token" value="(.+)">/);
+      console.log(token);
+      return {status: response.status, token: token}
+    })
+    .catch((error)=>{
+      return {status: error.status, error: error}
+    })
+    .finally(()=>{
+    });
   })
 }
 
-// function setCookie(req: NextApiRequest, res: NextApiResponse<string>, fn:any) {
-//   return new Promise((resolve, reject) => {
-//     req.cookies.set('Hi', 'Hi');
-//   })
-// }
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse<string> ){
-  await runCors(req, res, cors);
+  const data = {
+    inputCompany: COMPANY_ID,
+    inputID: req.body.memberId,
+    inputPassword: req.body.password
+  };
 
-  let cookieStr = '';
-  console.log(req.cookies)
-  for (const [key, value] of Object.entries(req.cookies)) {
-    cookieStr += `${key}=${value}; `;
-    // setCookies(key, value, { req, res })
+  const reqCookies = req.headers.cookie;
+
+  if(reqCookies){
+    const loginConfig = new CNeuipRequestConfig(
+      '/login/index/param',
+      'post',
+      data,
+      req.headers.cookie
+    )
+
+    axios({
+      ...loginConfig,
+      maxRedirects: 0
+    })
+    .then((response)=>{
+      res.status(401).json("login Failed");
+    })
+    .catch(async (error)=>{
+      const repCookies = error.response.headers['set-cookie'];
+      const loginToken = await homeAPI(repCookies);
+    })
+    .finally(()=>{
+    });
+
+  }else{
+    res.status(401).json('Login failed');
   }
-
-  const data = JSON.stringify({
-    // inputCompany: req.body.company,
-    // inputID: req.body.memberId,
-    // inputPassword: req.body.password
-    'inputCompany': 'essences',
-    'inputID': 'R0203',
-    'inputPassword': '@Aa987654322'
-  });
-
-  // console.log(data)
-  // console.log('cookieStr: ', cookieStr)
-
-  axios({
-    url: 'https://cloud.nueip.com/login/index/param',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Cookie': `${cookieStr}`
-    },
-    method: 'post',
-    data
-  })
-  .then((response)=>{
-    res.status(200).json(response.data);
-  })
-  .catch((error)=>{
-    // console.log(error);
-  })
-  .finally(()=>{
-  });
-
-  // Postman
-  // const data = JSON.stringify({
-  //   'inputCompany': 'essences',
-  //   'inputID': 'R0203',
-  //   'inputPassword': '@Aa987654322'
-  // });
-  // var config = {
-  //   method: 'post',
-  //   url: 'https://cloud.nueip.com//login/index/param',
-  //   headers: {
-  //     'Content-Type': 'application/x-www-form-urlencoded',
-  //     'Cookie': 'PHPSESSID=mrti2lpjoq5bqfjrsrfbirne32; csrf_token=6e1f9a4e83858e5f72936ec7914e6f4b;'
-  //   },
-  //   data : data
-  // };
-
-  // axios(config)
-  // .then(function (response) {
-  //   console.log(JSON.stringify(response.data));
-  // })
-  // .catch(function (error) {
-  //   console.log(error);
-  // });
 }

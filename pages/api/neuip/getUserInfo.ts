@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { csrfTokenName } from '../../constants';
+import { csrfTokenName } from '../../../constants';
 import axios from 'axios';
-import  { getCookies, setCookies } from 'cookies-next';
 
 interface userInfo{
   company: string,

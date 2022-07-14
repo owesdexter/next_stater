@@ -7,8 +7,12 @@ const nextConfig = {
   },
   async rewrite(){
     return [
+      // {
+      //   source: '/api/neuip/:path*',
+      //   destination: 'https://cloud.nueip.com/neuip/:path'
+      // },
       {
-        source: '/api/neuip/:path*',
+        source: '/NEUIP/:path*',
         destination: 'https://cloud.nueip.com/neuip/:path'
       }
     ]
