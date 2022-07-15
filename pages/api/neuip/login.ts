@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { COMPANY_ID } from '../../../constants';
 import { CNeuipRequestConfig } from '../../../http';
+import { COMPANY_ID } from '../../../constants';
 import axios from 'axios';
-import qs from 'qs';
 
 interface userInfo{
   company: string,
@@ -12,31 +11,42 @@ interface userInfo{
   username: string,
 }
 
-const homeAPI = (reqCookie: string[])=>{
+const homeAPI = (data:any, reqCookie: string[]): Promise<[number, string]>=>{
   return new Promise((resolve, reject)=>{
+
     const axiosConfig = new CNeuipRequestConfig(
       '/home',
-      'get',
-      '',
-      reqCookie,
+      'post',
+      data,
+      reqCookie
     )
+
     axios({
       ...axiosConfig
     })
     .then((response)=>{
-      const token = JSON.stringify(response).match(/<input type="hidden" name="token" value="(.+)">/);
-      console.log(token);
-      return {status: response.status, token: token}
+      let token = '';
+      const result = `${response.data}`.match(/(<input type="hidden" name="token" value=")(.+)(">)/);
+      if(result?.length){
+        token = result[2];
+        console.log('token', token);
+        resolve([response.status, 'Login successfully!'])
+      }else {
+        resolve([401, 'Login failed'])
+      }
     })
     .catch((error)=>{
-      return {status: error.status, error: error}
+      reject([error.status, error])
     })
-    .finally(()=>{
-    });
   })
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<string> ){
+  // const data = {
+  //   inputCompany: 'essences',
+  //   inputID: 'R0203',
+  //   inputPassword: '@Aa987654321'
+  // };
   const data = {
     inputCompany: COMPANY_ID,
     inputID: req.body.memberId,
@@ -61,8 +71,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       res.status(401).json("login Failed");
     })
     .catch(async (error)=>{
-      const repCookies = error.response.headers['set-cookie'];
-      const loginToken = await homeAPI(repCookies);
+      const resCookies = error.response.headers['set-cookie'];
+      const [status, message] = await homeAPI(data, resCookies);
+      res.status(status).json(message);
     })
     .finally(()=>{
     });

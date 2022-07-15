@@ -30,6 +30,7 @@ export default function PageLogin(){
     .then((res)=>{
       console.log(res.data)
       router.push('/login');
+      // setIsLogining(false);
     })
     .catch((err)=>{
       console.log(err);
