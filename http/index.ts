@@ -13,7 +13,21 @@ const urlMapping = (type: EAPIs)=>{
   }
 }
 
-const cookieToString = (cookies?: string[] | string, filterCookieFn?: (key:string, value:string)=>string):string =>{
+const filterCookieFn = (key: string, value:string): string =>{
+  if((
+    key==='activity' ||
+    key==='signature' ||
+    key==='checksum' ||
+    key==='tkchecksum'
+    ) && value==='1'
+  ){
+    return ''
+  }else{
+    return value
+  }
+}
+
+const cookieToString = (cookies?: string[] | string, filterFn?: (key:string, value:string)=>string):string =>{
   let cookieStr = '';
   if(cookies && Array.isArray(cookies)){
     for (let i = 0; i < cookies.length; i++){
@@ -25,8 +39,8 @@ const cookieToString = (cookies?: string[] | string, filterCookieFn?: (key:strin
         continue
       }
 
-      if(filterCookieFn){
-        value = filterCookieFn(key, value);
+      if(filterFn){
+        value = filterFn(key, value);
       }
 
       if(value && value!=='deleted'){
@@ -40,6 +54,33 @@ const cookieToString = (cookies?: string[] | string, filterCookieFn?: (key:strin
     cookieStr = cookies
   }
   return cookieStr
+}
+
+export const changeCookiesDomain = (cookies: string[]):string[] =>{
+  const arr = [] as string[];
+  for (let i = 0; i < cookies.length; i++){
+    let cookieStr = cookies[i];
+    const keyAndValue = cookies[i].split('; ')[0];
+    let [key, value] = keyAndValue.split('=');
+
+    if(!value || value==='deleted'){
+      continue
+    }
+
+    const filteredArr = cookies.filter(el=>el.startsWith(`${key}=`));
+    if(filteredArr?.length>1 && filteredArr[filteredArr.length-1] !== cookies[i] && value!=='deleted'){
+      continue
+    }
+
+    value = filterCookieFn(key, value);
+
+    if(cookies[i].includes('domain')){
+      cookieStr = cookies[i].replace(/(domain=)(.+)/, `$1${process.env.HOST}`);
+    }
+
+    arr.push(cookieStr);
+  }
+  return arr;
 }
 
 class ConfigFactory {
@@ -67,21 +108,9 @@ class ConfigFactory {
 export class CNeuipRequestConfig extends ConfigFactory{
   public data: any;
 
-  constructor(path: string, method: string, data?:any, cookies?: string[] | string){
+  constructor(path: string, method: string, cookies?: string[] | string, data?:any){
     let cookieStr = '';
-    const filterCookieFn = (key: string, value:string): string =>{
-      if((
-        key==='activity' ||
-        key==='signature' ||
-        key==='checksum' ||
-        key==='tkchecksum'
-        ) && value==='1'
-      ){
-        return ''
-      }else{
-        return value
-      }
-    }
+
     cookieStr = cookieToString(cookies, filterCookieFn);
     super(EAPIs.Neuip, 'application/x-www-form-urlencoded', path, method, cookieStr);
     this.data = qs.stringify(data);

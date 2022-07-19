@@ -3,7 +3,7 @@ import type { Moment } from 'moment';
 import moment from 'moment';
 import { useState, useContext, useEffect } from 'react';
 import { ExporterContext } from '../contextProvider/exporter';
-import { getAllMonth, IOptions } from '../../constants';
+import { getAllMonth } from '../../constants';
 import NumericalInput from '../numericalInput';
 const { Option } = Select;
 const selectableMonths = getAllMonth();

@@ -28,9 +28,7 @@ export default function PageLogin(){
       data,
     })
     .then((res)=>{
-      console.log(res.data)
-      router.push('/login');
-      // setIsLogining(false);
+      router.push('/exporter');
     })
     .catch((err)=>{
       console.log(err);

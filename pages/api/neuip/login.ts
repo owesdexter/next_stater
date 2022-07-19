@@ -1,52 +1,98 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { CNeuipRequestConfig } from '../../../http';
-import { COMPANY_ID } from '../../../constants';
+import { COMPANY_ID, IUserInfo, CUserInfo } from '../../../constants';
 import axios from 'axios';
 
-interface userInfo{
-  company: string,
-  department: string,
-  headshotPosition: string,
-  memberId: string,
-  username: string,
+const parseHtml = (htmlStr: string, reg: RegExp, index: number)=>{
+  let str = '';
+  let result = htmlStr.match(reg);
+
+  if(result?.length){
+    return result[index];
+  }else {
+    return str;
+  }
 }
 
-const homeAPI = (data:any, reqCookie: string[]): Promise<[number, string]>=>{
+const getUserSns = (reqCookie: string[]): Promise<{status: number, data?: any}>=>{
   return new Promise((resolve, reject)=>{
-
     const axiosConfig = new CNeuipRequestConfig(
-      '/home',
-      'post',
-      data,
+      '/personal_leave_resource',
+      'get',
       reqCookie
     )
+
+    const res = {
+      status: 200,
+      data: {} as IUserInfo
+    }
 
     axios({
       ...axiosConfig
     })
     .then((response)=>{
-      let token = '';
-      const result = `${response.data}`.match(/(<input type="hidden" name="token" value=")(.+)(">)/);
-      if(result?.length){
-        token = result[2];
-        console.log('token', token);
-        resolve([response.status, 'Login successfully!'])
+      const data = `${response.data}`;
+      res.status = 200;
+      res.data.s_sn = parseHtml(data, /(<input type="hidden" id="my_deptsn" value=")(.+)(">)/, 2);
+      res.data.u_sn = parseHtml(data, /(<input type="hidden" id="my_sn" value=")(.+)(">)/, 2);
+      res.data.d_sn = parseHtml(data, /(<input type="hidden" id="my_dept" value=")(.+)(">)/, 2);
+      res.data.c_sn = parseHtml(data, /(<input type="hidden" id="my_cmpny" value=")(.+)(">)/, 2);
+
+      if(res.data.s_sn?.length){
+        resolve(res)
       }else {
-        resolve([401, 'Login failed'])
+        reject({status: 401})
       }
     })
     .catch((error)=>{
-      reject([error.status, error])
+      res.status = error?.code ? error.code: 401;
+      res.data = error?.message ? error.message: 'Error: Bad Request';
+      reject(res)
     })
   })
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<string> ){
-  // const data = {
-  //   inputCompany: 'essences',
-  //   inputID: 'R0203',
-  //   inputPassword: '@Aa987654321'
-  // };
+const getUserText = (data:any, reqCookie: string[]): Promise<{status: number, data?: any}>=>{
+  return new Promise((resolve, reject)=>{
+    const axiosConfig = new CNeuipRequestConfig(
+      '/home',
+      'post',
+      reqCookie,
+      data,
+    )
+
+    const res = {
+      status: 200,
+      data: {} as IUserInfo
+    }
+
+    axios({
+      ...axiosConfig
+    })
+    .then((response)=>{
+      const data = `${response.data}`;
+      res.status = 200;
+      res.data.staffId = parseHtml(data, /(<input type="hidden" name="headshot_uno" value=")(.+)(">)/, 2);
+      res.data.username = parseHtml(data, /(<input type="hidden" name="username" value=")(.+)(">)/, 2);
+      res.data.position = parseHtml(data, /(<input type="hidden" name="headshot_position" value=")(.+)(">)/, 2);
+      res.data.department = parseHtml(data, /(<label class="font-size_13 margin-bottom-0">部門<\/label>)(\s+)(<div class="padding-bottom-10">\s*)(.+)(\s*<\/div>)/, 4);
+      res.data.loginToken = parseHtml(data, /(<input type="hidden" name="token" value=")(.+)(">)/, 2);
+
+      if(res.data.loginToken?.length){
+        resolve(res)
+      }else {
+        reject({status: 401})
+      }
+    })
+    .catch((error)=>{
+      res.status = error?.code ? error.code: 401;
+      res.data = error?.message ? error.message: 'Error: Bad Request';
+      reject(res)
+    })
+  })
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse<any>){
   const data = {
     inputCompany: COMPANY_ID,
     inputID: req.body.memberId,
@@ -59,8 +105,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const loginConfig = new CNeuipRequestConfig(
       '/login/index/param',
       'post',
-      data,
-      req.headers.cookie
+      req.headers.cookie,
+      data
     )
 
     axios({
@@ -71,9 +117,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       res.status(401).json("login Failed");
     })
     .catch(async (error)=>{
-      const resCookies = error.response.headers['set-cookie'];
-      const [status, message] = await homeAPI(data, resCookies);
-      res.status(status).json(message);
+      const cookies = error.response.headers['set-cookie'];
+      Promise.all([getUserText(data, cookies), getUserSns(cookies)])
+      .then((value)=>{
+        console.log(new CUserInfo({...value[0].data, ...value[1].data}));
+        res.status(200).json(value);
+      })
+      .catch((error)=>{
+        res.status(401).json(error.response.message);
+      })
     })
     .finally(()=>{
     });
