@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { CNeuipRequestConfig, changeCookiesDomain } from '../../../http';
+import { CNeuipRequestConfig } from '../../../http';
 import { COMPANY_ID, IUserInfo, CUserInfo } from '../../../constants';
 import axios , { AxiosResponse }from 'axios';
 
@@ -13,16 +13,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       'action=list'
     )
 
+    console.log(req.headers.cookie);
 
-    axios({
-      ...axiosConfig
-    })
-    .then((response)=>{
-      console.log(response.data);
 
-    })
-    .catch((error)=>{
-      console.log(error.response.message);
-    })
+    // axios({
+    //   ...axiosConfig
+    // })
+    // .then((response)=>{
+    //   console.log(response.data);
+
+    // })
+    // .catch((error)=>{
+    //   console.log(error.response.message);
+    // })
   })
 }

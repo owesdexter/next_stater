@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { CNeuipRequestConfig } from '../../../http';
-import { COMPANY_ID, IUserInfo, CUserInfo } from '../../../constants';
+import { CNeuipRequestConfig, resetCookies, getMinCookieExpireTime, jwtEncoder} from '../../../http';
+import { COMPANY_ID, ISns, ITokens, IUserInfo, CUserInfo } from '../../../constants';
 import axios from 'axios';
 
 const parseHtml = (htmlStr: string, reg: RegExp, index: number)=>{
@@ -24,7 +24,7 @@ const getUserSns = (reqCookie: string[]): Promise<{status: number, data?: any}>=
 
     const res = {
       status: 200,
-      data: {} as IUserInfo
+      data: {} as ISns
     }
 
     axios({
@@ -63,7 +63,7 @@ const getUserText = (data:any, reqCookie: string[]): Promise<{status: number, da
 
     const res = {
       status: 200,
-      data: {} as IUserInfo
+      data: {} as any
     }
 
     axios({
@@ -72,6 +72,7 @@ const getUserText = (data:any, reqCookie: string[]): Promise<{status: number, da
     .then((response)=>{
       const data = `${response.data}`;
       res.status = 200;
+      res.data.company = parseHtml(data, /(target="_blank" rel="noreferrer noopener">)([\s\n]*)(.+)(<\/a>)/, 3);
       res.data.staffId = parseHtml(data, /(<input type="hidden" name="headshot_uno" value=")(.+)(">)/, 2);
       res.data.username = parseHtml(data, /(<input type="hidden" name="username" value=")(.+)(">)/, 2);
       res.data.position = parseHtml(data, /(<input type="hidden" name="headshot_position" value=")(.+)(">)/, 2);
@@ -92,7 +93,10 @@ const getUserText = (data:any, reqCookie: string[]): Promise<{status: number, da
   })
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<any>){
+let Tom: [string, number] = ['hi', 0];
+Tom[0] = 'Tom';
+
+export default async function useHandler(req: NextApiRequest, res: NextApiResponse<any>){
   const data = {
     inputCompany: COMPANY_ID,
     inputID: req.body.memberId,
@@ -118,13 +122,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     })
     .catch(async (error)=>{
       const cookies = error.response.headers['set-cookie'];
+
       Promise.all([getUserText(data, cookies), getUserSns(cookies)])
       .then((value)=>{
-        console.log(new CUserInfo({...value[0].data, ...value[1].data}));
-        res.status(200).json(value);
+        const resetCookie = resetCookies(cookies);
+        const expireTimestamp = getMinCookieExpireTime(resetCookie);
+        const secureInfo = {
+          ...value[1].data,
+          loginToken: value[0].data.loginToken,
+          exp: expireTimestamp
+        };
+
+        res.setHeader('Set-Cookie', [...resetCookie, `sns=${jwtEncoder(secureInfo)}; path=/; domain=${process.env.HOST};`]);
+        res.setHeader('Authentication', jwtEncoder(secureInfo));
+        delete value[0].data.loginToken;
+        res.status(200).json(value[0].data);
       })
       .catch((error)=>{
-        res.status(401).json(error.response.message);
+        const error_msg = error?.response?.message ? error.response.message: 'login failed';
+        res.status(401).json(error_msg);
       })
     })
     .finally(()=>{

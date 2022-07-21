@@ -2,16 +2,18 @@ import { useState, useEffect, MouseEventHandler } from 'react';
 import { Input, Button, Space } from 'antd';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import { COMPANY_ID } from '../constants';
+import { userActions } from "../store/user";
+import { useDispatch } from 'react-redux';
 
 
-export default function PageLogin(){
+export default function Login(){
   const [password, setPassword] = useState<string>('');
   const [memberId, setMemberId] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [isLogining, setIsLogining] = useState<boolean>(false);
 
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const loginAPI = ()=>{
     const data = {
@@ -28,7 +30,8 @@ export default function PageLogin(){
       data,
     })
     .then((res)=>{
-      router.push('/exporter');
+      router.push('/');
+      dispatch(userActions.storeUser(res.data));
     })
     .catch((err)=>{
       console.log(err);

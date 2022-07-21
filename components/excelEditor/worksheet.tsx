@@ -172,20 +172,16 @@ export default function Preview(){
 
       if(values?.length){
         for(let i = 1; i < values.length; i++){
-          console.log(`for loop start:  ${i}`)
-
           const value = values[i]?`${values[i]}`: '';
 
           if(value){
             const index = values.lastIndexOf(value);
             if(index !== i){
-              console.log(`${i}, ${index}`)
               colspan = index - i + 1;
               element = (
                 <th key={`${rowType}-${value}-${i}`} className="th" colSpan={colspan}>{value}</th>
               )
               if(index+1>=values.length){
-                console.log('break')
                 cells.push(element)
                 break
 

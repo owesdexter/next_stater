@@ -1,7 +1,30 @@
-export interface IContactInfo{
+export interface IBasicInfo{
+  company: string,
+  department: string,
+  position: string,
+  staffId: string,
+  username: string,
+}
 
+export interface ISns{
+  s_sn: string,
+  u_sn: string,
+  d_sn: string,
+  c_sn: string,
+}
+
+export interface ITokens{
+  login: string,
+}
+
+export interface IContactInfo{
   email: string;
   mobile: string;
+}
+
+export interface IAdditionalInfo{
+  nickname?: string,
+  arriveData?: Date;
 }
 
 export interface IUserInfo{
@@ -10,13 +33,17 @@ export interface IUserInfo{
   position: string,
   staffId: string,
   username: string,
-  s_sn: string,
-  u_sn: string,
-  d_sn: string,
-  c_sn: string,
-  loginToken: string,
+  sns?: ISns,
+  contactInfo?: IContactInfo,
+  additionalInfo?: IAdditionalInfo,
+  tokens?: ITokens,
+  // s_sn: string,
+  // u_sn: string,
+  // d_sn: string,
+  // c_sn: string,
+  // loginToken: string,
   nickname?: string,
-  contactInfo?: string,
+  // contactInfo?: string,
 }
 
 export class CUserInfo implements IUserInfo{
@@ -25,23 +52,43 @@ export class CUserInfo implements IUserInfo{
   readonly position: string;
   readonly staffId: string;
   readonly username: string;
-  readonly s_sn: string;
-  readonly u_sn: string;
-  readonly d_sn: string;
-  readonly c_sn: string;
-  readonly loginToken: string
+  sns?: ISns;
+  contactInfo?: IContactInfo;
+  additionalInfo?: IAdditionalInfo;
+  tokens?: ITokens;
 
-  constructor(props: IUserInfo){
-    this.company = props.company;
-    this.department = props.department;
-    this.position = props.position;
-    this.staffId = props.staffId;
-    this.username = props.username;
-    this.s_sn = props.s_sn;
-    this.u_sn = props.u_sn;
-    this.d_sn = props.d_sn;
-    this.c_sn = props.c_sn;
-    this.loginToken = props.loginToken;
+  // readonly s_sn: string;
+  // readonly u_sn: string;
+  // readonly d_sn: string;
+  // readonly c_sn: string;
+  // readonly loginToken: string
+
+  constructor(props: any, sns?:ISns, contactInfo?: IContactInfo, additionalInfo?: IAdditionalInfo){
+    this.company = props.company ?? '易勝資訊';
+    this.department = props.department ?? '委外事業一部';
+    this.position = props.position ?? '助理工程師';
+    this.staffId = props.staffId ?? '';
+    this.username = props.username ?? '';
+
+    // this.sns = sns ?? {
+    //   s_sn: '',
+    //   u_sn: '',
+    //   d_sn: '',
+    //   c_sn: '',
+    // }
+    // this.contactInfo = contactInfo ?? {
+    //   email: '',
+    //   mobile: '',
+    // }
+    // this.additionalInfo = additionalInfo ?? {
+    //   nickname: '',
+    //   arriveData: new Date(1663603200)
+    // }
+    // this.s_sn = props.s_sn ?? '';
+    // this.u_sn = props.u_sn ?? '';
+    // this.d_sn = props.d_sn ?? '25465';
+    // this.c_sn = props.c_sn ?? '6607';
+    // this.loginToken = props.loginToken ?? '';
   }
 }
 
@@ -52,10 +99,10 @@ export class CUserInfo implements IUserInfo{
     position: '助理工程師',
     staffId: 'R0203',
     username: '陳居仲',
-    s_sn: '208428',
-    u_sn: '208996',
-    d_sn: '25465',
-    c_sn: '6607',
+    "s_sn": "208428",
+    "u_sn": "208996",
+    "d_sn": "25465",
+    "c_sn": "6607",
     loginToken: '91327634c768f51e124d5de1d408c37d18c5c7739a26f3d4d161728d8e595052'
   }
 */
@@ -72,7 +119,7 @@ const fake = {
 const Sns = {
   "208996": {
     "s_sn": "208428",   // StaffId: 操作用這個
-    "u_sn": "208996",   // UserId: 假期查詢
+    "u_sn": "208996",   // UserId: 假期 Resource 會顯示
     "c_sn": "6607",     // CompanyId: Home
     "d_sn": "25465",    // dept_id:
     "g_sn": "0",
@@ -131,3 +178,17 @@ const personal_leave = {
   }
 */
 
+/* JWT
+  {
+    "s_sn": "208428",
+    "u_sn": "208996",
+    "d_sn": "25465",
+    "c_sn": "6607"
+  }
+  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzX3NuIjoiMjA4NDI4IiwidV9zbiI6IjIwODk5NiIsImRfc24iOiIyNTQ2NSIsImNfc24iOiI2NjA3In0.NPkcumxUjeIFPjg2ZBzXcMQ0CAqVmVx1z_5dC7vNEsw
+
+  {
+    "s_sn": "208428"
+  }
+  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzX3NuIjoiMjA4NDI4In0.b6KpkgHRGxJIOqvNADJKsOzqNQmNnZp2EI390rJPDH4
+*/

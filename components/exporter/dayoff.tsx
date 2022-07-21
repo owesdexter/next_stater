@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import { ExporterContext, ISpecialWorkTime } from '../contextProvider/exporter'
 import DayoffEditor from '../dayoffEditor';
 import { ESpecialWorkHour, ELeaveType } from '../../constants';
+import axios from 'axios';
 
 const dayoffOptions = [
   {
@@ -53,6 +54,20 @@ export default function Dayoff({onInvalid}: TDayoffProps){
   const handleListChange = (list:ISpecialWorkTime[])=>{
     updateOvertime(list);
   }
+
+  useEffect(()=>{
+    axios('/api/neuip/getLeaveResouce',{
+      withCredentials: true
+    })
+    .then((res)=>{
+      console.log(res.data)
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+    .finally(()=>{
+    });
+  }, [])
 
   return(
     <div className="basic-step-container">

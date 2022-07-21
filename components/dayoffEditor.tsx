@@ -118,7 +118,7 @@ export default function WorkTimeEditor({
   };
 
   useEffect(()=>{
-    console.log('effect', list)
+    // console.log('effect', list)
     onChange(list);
   }, [list, onChange])
 

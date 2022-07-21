@@ -39,12 +39,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<any>){
   getBytes(starsRef)
   .then(async response => {
     res.status(200).send(response);
-    // console.log(response);
     // const workbook = new Excel.Workbook();
     // await workbook.xlsx.load(res);
     // setWorksheet(workbook.getWorksheet(getWorksheetName(targetMonth)));
     // // const worksheet = workbook.getWorksheet(getWorksheetName(generalWorkTime.targetMonth));
-    // // console.log('1107', worksheet)
   })
   .catch((error) => {
     // A full list of error codes is available at
