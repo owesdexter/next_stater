@@ -22,9 +22,7 @@ const steps = [
 export default function PageExporter(){
   const { isProhibitedNext } = useContext(ExporterContext);
   const [currentStep, setCurrentStep] = useState<number>(2);
-  // const [isProhibitedNext, setIsProhibitedNext] = useState<boolean>(false);
   const userInfo = useSelector((state:any) => state.user);
-  console.log('userInfo', userInfo);
 
   const next = ()=>{
     if(isProhibitedNext){

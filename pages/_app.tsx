@@ -1,10 +1,12 @@
 import '../styles/style.scss';
 import 'antd/dist/antd.css';
-import type { ReactElement, ReactNode } from 'react';
+import type { ReactElement, ReactNode, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import { Provider } from 'react-redux';
 import  store  from '../store';
+import { appWithTranslation } from 'next-i18next';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -14,8 +16,13 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout
 }
 
-function MyApp({ Component, pageProps }: AppPropsWithLayout) {
-  const getLayout = Component.getLayout ?? ((page) => page);
+const MyApp = ({ Component, pageProps }: any) =>{
+  const getLayout = Component.getLayout ?? ((page:any) => page);
+  // const router = useRouter();
+  // const { locale } = router;
+  // useEffect(()=>{
+  //   i18n.changeLanguage(locale);
+  // }, [locale])
   return (
     getLayout(
       <Provider store={store}>
@@ -25,4 +32,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   )
 }
 
-export default MyApp
+// const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => (
+//   <Provider store={store}>
+//     <Component {...pageProps} />
+//   </Provider>
+// );
+
+export default appWithTranslation(MyApp);
+// export default MyApp;
