@@ -133,7 +133,7 @@ export default async function useHandler(req: NextApiRequest, res: NextApiRespon
           exp: expireTimestamp
         };
 
-        res.setHeader('Set-Cookie', [...resetCookie, `sns=${jwtEncoder(secureInfo)}; path=/; domain=${process.env.HOST};`]);
+        res.setHeader('Set-Cookie', [...resetCookie, `sns=${jwtEncoder(secureInfo)}; path=/; domain=${process.env.HOST}; secure`]);
         res.setHeader('Authentication', jwtEncoder(secureInfo));
         delete value[0].data.loginToken;
         res.status(200).json(value[0].data);

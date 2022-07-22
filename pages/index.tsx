@@ -1,31 +1,31 @@
+import { GetStaticProps } from 'next';
 import Layout from '../components/layout';
 import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
 import { getCookie } from 'cookies-next';
 import { useSelector } from "react-redux";
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 export default function Home(){
+  const { t } = useTranslation('common');
   const router = useRouter();
-  if(typeof window !== 'undefined' && !getCookie('sns')){
-    router.push('/login');
+  if(typeof window !== 'undefined'){
+    if(!getCookie('sns')){
+      router.push('/login');
+    }
   }
   const userInfo = useSelector((state:any) => state.user);
-  console.log('userInfo', userInfo);
-  router.push('/exporter');
 
   return (
     <div>
-      <h1>Index</h1>
+      <h1>{t('__t_Home')}</h1>
       <ul>
         {/* <li>{userInfo}</li> */}
       </ul>
     </div>
   )
 }
-
-import { GetServerSideProps } from 'next'
-
-
 
 Home.getLayout = function getLayout(page: ReactElement){
   return (
@@ -34,3 +34,11 @@ Home.getLayout = function getLayout(page: ReactElement){
     </Layout>
   )
 }
+
+
+export const getStaticProps: GetStaticProps  = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale?? `${process.env.defaultLang}`, ['common'])),
+    // Will be passed to the page component as props
+  },
+});
