@@ -399,5 +399,6 @@
   "__t_Plz_select_sth": "請選擇{sth}",
   "__t_Sth_cant_exceed_length_character": "{sth}不得超出{length}字元",
   "__t_Plz_fill_in_all_required_input": "請填寫所有必填欄位",
-  "__t_without_options": "目前無任何{option}可供選擇"
+  "__t_without_options": "目前無任何{option}可供選擇",
+  "__t_Staff_ID": "員工編號"
 }

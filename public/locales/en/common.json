@@ -399,5 +399,6 @@
   "__t_Plz_select_sth": "Please select a {sth}.",
   "__t_Sth_cant_exceed_length_character": "{sth} can't exceed {length} characters.",
   "__t_Plz_fill_in_all_required_input": "Please fill in all the required fields.",
-  "__t_without_options": "There is no any {option} can be chosen."
+  "__t_without_options": "There is no any {option} can be chosen.",
+  "__t_Staff_ID": "Staff ID"
 }

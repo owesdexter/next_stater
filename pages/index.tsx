@@ -1,3 +1,4 @@
+import { GetStaticProps } from 'next';
 import Layout from '../components/layout';
 import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
@@ -35,11 +36,9 @@ Home.getLayout = function getLayout(page: ReactElement){
 }
 
 
-export async function getStaticProps({ locale }) {
-  return {
-    props: {
-      ...(await serverSideTranslations(locale, ['common'])),
-      // Will be passed to the page component as props
-    },
-  };
-}
+export const getStaticProps: GetStaticProps  = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale?? `${process.env.defaultLang}`, ['common'])),
+    // Will be passed to the page component as props
+  },
+});
