@@ -24,6 +24,8 @@ export default function Home(){
         console.log(`登入成功 ${loginTokenExpireTime} > ${Math.floor(now.getTime()/ 1000)}`);
         router.push('/exporter');
       }
+    }else{
+      router.push('/login');
     }
   }
   const userInfo = useSelector((state:any) => state.user);

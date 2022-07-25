@@ -20,7 +20,7 @@ const MyApp = ({ Component, pageProps }: any) =>{
   return (
     <Provider store={store}>{
       getLayout(
-          <Component {...pageProps} />
+        <Component {...pageProps} />
       )
     }
     </Provider>
