@@ -3,7 +3,7 @@ import { useState, useEffect, MouseEventHandler } from 'react';
 import { Input, Button, Space } from 'antd';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import { userActions } from "../store/user";
+import { userActions } from "../components/providers/store/user";
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
