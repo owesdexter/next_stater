@@ -5,12 +5,15 @@ import { useState, useContext, useEffect } from 'react';
 import { ExporterContext } from '../contextProvider/exporter';
 import { getAllMonth } from '../../constants';
 import NumericalInput from '../numericalInput';
+import { useTranslation } from 'next-i18next';
+
 const { Option } = Select;
 const selectableMonths = getAllMonth();
 
 export default function Basic(){
   const { generalWorkTime, updateGeneralWorkTime } = useContext(ExporterContext);
   const { sd, startTime, targetMonth } = generalWorkTime;
+  const { t } = useTranslation();
 
   const handleMonthChange = (value: string) => {
     updateGeneralWorkTime({
@@ -56,18 +59,18 @@ export default function Basic(){
   return(
     <div className="basic-step-container">
       <div className="step-title-container">
-        <label htmlFor="">建立</label>
+        <label htmlFor="">{t('__t_Create')}</label>
         <Select data-testid="month-select-0" defaultValue={`${targetMonth}`} onChange={handleMonthChange}>
           {selectableMonths?.map(el=>
             <Option value={el} key={el}>{el}</Option>
           )}
         </Select>
-        <label htmlFor="">月工時表</label>
+        <label htmlFor="">{t('__t_month_timesheet')}</label>
       </div>
       <div>
       </div>
       <div>
-        <label htmlFor="">上班時間</label>
+        <label htmlFor="">{t('__t_Check_in_time')}</label>
         <TimePicker
           format={'HH:mm'}
           minuteStep={5}
@@ -90,11 +93,11 @@ export default function Basic(){
           data-testid="sd-input-1-0"
           onChange={handleSdChange}
         />
-        <label htmlFor="sd-input-1-0">分鐘</label>
+        <label htmlFor="sd-input-1-0">{t('__t_minute')}</label>
       </div>
       <ul className="warning-hint-container">
-        {showMaxWarning?<li>這樣會超過 9:30 喔!</li>:null}
-        {showMinWarning?<li>你真的有這麼早到嗎</li>:null}
+        {showMaxWarning?<li>{t('__t_exporter_warning_basic_setup_too_late')}</li>:null}
+        {showMinWarning?<li>{t('__t_exporter_warning_basic_setup_too_early')}</li>:null}
       </ul>
     </div>
   )

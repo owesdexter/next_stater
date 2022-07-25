@@ -400,5 +400,15 @@
   "__t_Sth_cant_exceed_length_character": "{sth} can't exceed {length} characters.",
   "__t_Plz_fill_in_all_required_input": "Please fill in all the required fields.",
   "__t_without_options": "There is no any {option} can be chosen.",
-  "__t_Staff_ID": "Staff ID"
+  "__t_Staff_ID": "Staff ID",
+  "__t_Timesheet": "Timesheet",
+  "__t_timesheet": "timesheet",
+  "__t_month_timesheet": "月工時表",
+  "__t_Check_in": "Check in",
+  "__t_Check_in_time": "Check in",
+  "__t_Overtime_pay": "Pay",
+  "__t_Overtime_vocation": "Vocation",
+  "__t_Serve_Unit": "Service Unit: {serveUnit}",
+  "__t_warning_exporter_basic_setup_too_late": "這樣會超過 9:30 喔!",
+  "__t_warning_exporter_basic_setup_too_early": "你真的有這麼早到嗎"
 }

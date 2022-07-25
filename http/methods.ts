@@ -113,16 +113,3 @@ export const jwtEncoder = (obj: any, expire?: string):string =>{
 export const jwtDecoder = (token: string):any =>{
   return jwt.decode(token);
 }
-
-
-
-
-// const methods = {
-//   neuipFilterCookieFn,
-//   cookieToString,
-//   resetCookies,
-//   jwtEncoder,
-//   jwtDecoder
-// }
-
-// export default methods;

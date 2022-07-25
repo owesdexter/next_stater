@@ -400,5 +400,17 @@
   "__t_Sth_cant_exceed_length_character": "{sth}不得超出{length}字元",
   "__t_Plz_fill_in_all_required_input": "請填寫所有必填欄位",
   "__t_without_options": "目前無任何{option}可供選擇",
-  "__t_Staff_ID": "員工編號"
+  "__t_Staff_ID": "員工編號",
+  "__t_Timesheet": "工時表",
+  "__t_timesheet": "工時表",
+  "__t_month_timesheet": "月工時表",
+  "__t_Check_in": "上班",
+  "__t_Check_in_time": "上班時間",
+  "__t_Overtime_pay": "加班費",
+  "__t_Overtime_vocation": "補休",
+  "__t_Serve_Unit": "客戶單位名稱：{serveUnit}",
+  "__t_warning_exporter_basic_setup_too_late": "這樣會超過 9:30 喔!",
+  "__t_warning_exporter_basic_setup_too_early": "你真的有這麼早到嗎?",
+  "__t_warning_overtime_too_much_monthly": "每月加班不能超過 {limit} 小時!"
+
 }

@@ -24,6 +24,7 @@ export interface IContactInfo{
 
 export interface IAdditionalInfo{
   nickname?: string,
+  serveUnit?: string,
   arriveData?: Date;
 }
 

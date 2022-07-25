@@ -2,14 +2,15 @@ import { useState, useContext, useEffect } from 'react';
 import { ExporterContext, ISpecialWorkTime } from '../contextProvider/exporter'
 import OverTimeEditor from '../overTimeEditor';
 import { ESpecialWorkHour, EOvertimeAwardType, MONTHLY_OVERTIME_LIMIT } from '../../constants';
+import { useTranslation } from 'next-i18next';
 
 const overTimeOptions = [
   {
-    title: '加班費',
+    title: '__t_Overtime_pay',
     value: EOvertimeAwardType.Money,
   },
   {
-    title: '補休',
+    title: '__t_Overtime_vocation',
     value: EOvertimeAwardType.Dayoff,
   },
 ]
@@ -17,6 +18,7 @@ const overTimeOptions = [
 export default function Overtime(){
   const { overtime, updateOvertime, updateIsProhibitedNext } = useContext(ExporterContext);
   const [showMaxWarning, setShowMaxWarning] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   const handleListChange = (list:ISpecialWorkTime[])=>{
     updateOvertime(list);
@@ -43,8 +45,9 @@ export default function Overtime(){
         onInvalid={updateIsProhibitedNext}
       />
       <ul className="warning-hint-container">
-        {showMaxWarning?<li>{`每月加班不能超過 ${MONTHLY_OVERTIME_LIMIT} 小時!`}</li>:null}
+        {/* {showMaxWarning?<li>{`每月加班不能超過 ${MONTHLY_OVERTIME_LIMIT} 小時!`}</li>:null} */}
+        {showMaxWarning?<li>{t('__t_warning_overtime_too_much_monthly', {limit: {MONTHLY_OVERTIME_LIMIT}})}</li>:null}
       </ul>
     </div>
   )
-}
+}1

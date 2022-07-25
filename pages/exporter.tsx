@@ -9,6 +9,9 @@ import Output from '../components/exporter/output';
 import ExportContextProvider, { ExporterContext } from '../components/contextProvider/exporter';
 import { Button, message, Steps } from 'antd';
 import { useSelector } from "react-redux";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { GetStaticProps } from 'next';
+
 const { Step } = Steps;
 
 const steps = [
@@ -67,47 +70,43 @@ export default function PageExporter(){
 
   return(
     <div className="page-exporter bs5-container">
-      {/* <ExportContextProvider> */}
-        {/* <div> */}
-          <div className="content">
-            <Steps
-              current={currentStep}
-              type="navigation"
-              direction="vertical"
-              className="site-navigation-steps step-bar-container"
-              onChange={goStep}
-            >
-              {steps.map(item => (
-                <Step key={item} title={item} />
-              ))}
-            </Steps>
+      <div className="content">
+        <Steps
+          current={currentStep}
+          type="navigation"
+          direction="vertical"
+          className="site-navigation-steps step-bar-container"
+          onChange={goStep}
+        >
+          {steps.map(item => (
+            <Step key={item} title={item} />
+          ))}
+        </Steps>
 
-            <ExportContextProvider>
-              <div className="steps-coimage.pngntent">
-                {renderSwitch(currentStep)}
-              </div>
-            </ExportContextProvider>
+        <ExportContextProvider>
+          <div className="steps-coimage.pngntent">
+            {renderSwitch(currentStep)}
           </div>
+        </ExportContextProvider>
+      </div>
 
-          <div className="footer steps-action">
-            {currentStep > 0 && (
-              <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
-                Previous
-              </Button>
-            )}
-            {currentStep < steps.length - 1 && (
-              <Button type="primary" onClick={() => next()}>
-                Next
-              </Button>
-            )}
-            {currentStep === steps.length - 1 && (
-              <Button type="primary" onClick={() => done()}>
-                Done
-              </Button>
-            )}
-          </div>
-        {/* </div> */}
-      {/* </ExportContextProvider> */}
+      <div className="footer steps-action">
+        {currentStep > 0 && (
+          <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
+            Previous
+          </Button>
+        )}
+        {currentStep < steps.length - 1 && (
+          <Button type="primary" onClick={() => next()}>
+            Next
+          </Button>
+        )}
+        {currentStep === steps.length - 1 && (
+          <Button type="primary" onClick={() => done()}>
+            Done
+          </Button>
+        )}
+      </div>
     </div>
   )
 }
@@ -119,3 +118,9 @@ PageExporter.getLayout = function getLayout(page: ReactElement) {
     </Layout>
   )
 }
+
+export const getStaticProps: GetStaticProps  = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale?? `${process.env.defaultLocale}`, ['common'])),
+  },
+});

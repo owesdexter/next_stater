@@ -1,6 +1,5 @@
-import { GetStaticProps, InferGetServerSidePropsType } from 'next';
+import { GetStaticProps } from 'next';
 import { useState, useEffect, MouseEventHandler } from 'react';
-// import Link from "next/link";
 import { Input, Button, Space } from 'antd';
 import { useRouter } from 'next/router';
 import axios from 'axios';
@@ -8,6 +7,7 @@ import { userActions } from "../store/user";
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useSelector } from "react-redux";
 
 export default function Login(){
   const [password, setPassword] = useState<string>('');
@@ -17,6 +17,7 @@ export default function Login(){
   const { t } = useTranslation();
   const router = useRouter();
   const dispatch = useDispatch();
+  const userInfo = useSelector((state:any) => state.user);
 
   const loginAPI = ()=>{
     const data = {
@@ -33,8 +34,8 @@ export default function Login(){
       data,
     })
     .then((res)=>{
-      router.push('/');
       dispatch(userActions.storeUser(res.data));
+      router.push('/');
     })
     .catch((err)=>{
       console.log(err);
@@ -49,6 +50,14 @@ export default function Login(){
     setIsLogining(true);
     loginAPI();
   }
+  // const testStore = ()=>{
+  //   console.log(userInfo)
+  //   // router.push('/');
+  // }
+  // const testRouter = ()=>{
+  //   console.log(userInfo)
+  //   router.push('/');
+  // }
 
   useEffect(()=>{
     axios('/api/neuip/preLogin')
@@ -72,6 +81,16 @@ export default function Login(){
           {t('__t_Login')}
         </Button>
       </div>
+      {/* <div>
+        <Button type="primary" loading={isLogining} onClick={testStore} suppressHydrationWarning>
+          {t('User')}
+        </Button>
+      </div>
+      <div>
+        <Button type="primary" loading={isLogining} onClick={testRouter} suppressHydrationWarning>
+          {t('Route')}
+        </Button>
+      </div> */}
       <div>
         <span>{errorMsg}</span>
       </div>
@@ -81,6 +100,6 @@ export default function Login(){
 
 export const getStaticProps: GetStaticProps  = async ({ locale }) => ({
   props: {
-    ...(await serverSideTranslations(locale?? `${process.env.defaultLang}`, ['common'])),
+    ...(await serverSideTranslations(locale?? `${process.env.defaultLocale}`, ['common'])),
   },
 });

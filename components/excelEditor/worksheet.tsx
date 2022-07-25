@@ -1,51 +1,52 @@
 import { useState, useContext, useEffect, useCallback, ReactNode } from 'react';
-import type { Row, CellValue, CellRichTextValue, CellFormulaValue } from "exceljs";
+import type { Row, Column, CellValue, CellRichTextValue, CellFormulaValue } from "exceljs";
 import { ExporterContext } from '../contextProvider/exporter';
 import { thKeywordMappingList, EThs, ALL_COLUMNS_LENGTH } from '../../constants';
+import { useSelector } from "react-redux";
+import { useTranslation } from 'next-i18next';
 
-type TTitles = {
-  date: string,
-  title: string,
-  staffName: string,
-  customerName: string
-};
+const initRowIdxMapping = {
+  title: 1,
+  staffinfo: 2,
+  th: 3,
+  inputStart: 4,
+  inputEnd: 35,
+  signature: 39
+}
 
-type TThIndexMapping = {
+type TThColIdxMapping = {
   [key in EThs]: number;
 };
 
+const initColIdxMapping: TThColIdxMapping = {
+  date: 1,
+  day: 2,
+  checkInTime: 3,
+  checkOutTime: 4,
+  normalWorkHours: 5,
+  absentHours: 6,
+  leaveHours: 7,
+  overTimeHours: 8,
+  actualHours: 9,
+  note: 10,
+}
+
 export default function Preview(){
-  const [title, setTitle] = useState<Row[]>();
+  const userInfo = useSelector((state:any) => state.user);
+  const { t } = useTranslation();
+  const [header, setHeader] = useState<Row[]>();
   const [content, setContent] = useState<Row[]>([]);
   const [footer, setFooter] = useState<Row[]>([]);
-  const [importantRowIdx, setImportantRowIdx] = useState<{[key:string]: number}>({
-    title: 1,
-    header: 2,
-    th: 3,
-    inputStart: 4,
-    inputEnd: 35,
-  });
-
-  const [indexMapping, setIndexMapping] = useState<TThIndexMapping>({
-    date: 1,
-    day: 2,
-    checkInTime: 3,
-    checkOutTime: 4,
-    normalWorkHours: 5,
-    absentHours: 6,
-    leaveHours: 7,
-    overTimeHours: 8,
-    actualHours: 9,
-    note: 10,
-  });
-
-  const { generalWorkTime, worksheet } = useContext(ExporterContext);
+  const [rowIdxMapping, setRowIdxMapping] = useState<{[key:string]: number}>(initRowIdxMapping);
+  const [colIdxMapping, setColIdxMapping] = useState<TThColIdxMapping>(initColIdxMapping);
+  const { worksheet } = useContext(ExporterContext);
 
   const test = ()=>{
     console.log()
-    console.log(title)
+    console.log(header)
     console.log(content)
     console.log(footer)
+    console.log(userInfo)
   }
 
   const renderCellText = (value: any): string=>{
@@ -73,12 +74,12 @@ export default function Preview(){
     }
   }
 
-  const buildImportantRowIdx = useCallback((row: Row)=>{
+  const getImpColIndex = useCallback((row: Row)=>{
     row.eachCell((row, colNumber)=>{
       const value = renderCellText(row.value);
       const target = thKeywordMappingList.find(el=>value.includes(el.keyword));
       if(target){
-        setIndexMapping(pre=>({
+        setColIdxMapping(pre=>({
           ...pre,
           [target.keyName]: colNumber
         }))
@@ -90,14 +91,7 @@ export default function Preview(){
     if(!worksheet){
       return
     }
-    let importantRowIdxTmp = {
-      title: 1,
-      header: 2,
-      th: 3,
-      inputStart: 4,
-      inputEnd: 35,
-      signature: 39
-    }
+    let impRowIdxTmp = initRowIdxMapping;
 
     for(let i=1; i<ALL_COLUMNS_LENGTH; i++){
       if(!worksheet.getColumn(i)){
@@ -112,41 +106,40 @@ export default function Preview(){
         if(!values[j]){
           continue
         }else if(`${values[j]}`.includes('年')){
-          importantRowIdxTmp.title = j;
+          impRowIdxTmp.title = j;
 
         }else if(`${values[j]}`.includes('姓名')){
-          importantRowIdxTmp.header = j;
+          impRowIdxTmp.staffinfo = j;
 
         }else if(`${values[j]}`.includes('日期')){
-          importantRowIdxTmp.th = j;
-          importantRowIdxTmp.inputStart = j + 1;
-          buildImportantRowIdx(worksheet.getRow(j));
+          impRowIdxTmp.th = j;
+          impRowIdxTmp.inputStart = j + 1;
+          getImpColIndex(worksheet.getRow(j));
 
         }else if(`${values[j]}`.includes('簽名')){
-          importantRowIdxTmp.signature = j;
+          impRowIdxTmp.signature = j;
 
         }else if(typeof values[j] !== 'number'){
-          importantRowIdxTmp.inputEnd = j;
+          impRowIdxTmp.inputEnd = j;
           break
         }
       }
 
-      setImportantRowIdx({
-        ...importantRowIdxTmp,
+      setRowIdxMapping({
+        ...impRowIdxTmp,
       });
-
       break
     }
 
-    const titleTr: Row[] = [];
+    const headerTr: Row[] = [];
     const content: Row[] = [];
     const footer: Row[] = [];
 
     worksheet.eachRow((row, rowNumber)=>{
-      if(rowNumber <importantRowIdxTmp.inputStart) {
-        titleTr.push(row);
+      if(rowNumber <impRowIdxTmp.inputStart) {
+        headerTr.push(row);
 
-      }else if(rowNumber > importantRowIdxTmp.inputEnd){
+      }else if(rowNumber > impRowIdxTmp.inputEnd){
         footer.push(row);
 
       }else{
@@ -154,13 +147,40 @@ export default function Preview(){
 
       }
     })
-    setTitle(titleTr);
+    setHeader(headerTr);
     setContent(content);
     setFooter(footer);
 
-  }, [worksheet, buildImportantRowIdx])
+  }, [worksheet, getImpColIndex])
 
+  // useEffect(()=>{
+  //   if(!worksheet){
+  //     return
+  //   }
+  //   let impAddress = initImpAddress;
 
+  //   for(let i=1; i<ALL_COLUMNS_LENGTH; i++){
+  //     if(!worksheet.getColumn(i)){
+  //       continue
+  //     }
+  //     const values = worksheet.getColumn(i).values as CellValue[];
+  //     for(let j=0; j<values.length; j++){
+
+  //       if(!values.find(el=>el)){
+  //         continue
+
+  //       }else if(`${values[j]}`.includes('客戶')){
+  //         impAddress.custom = `${String.fromCharCode(i+64+2)}${j}`;
+
+  //       }else if(`${values[j]}`.includes('姓名')){
+  //         impAddress.userName = `${String.fromCharCode(i+64+2)}${j}`;
+  //       }
+  //     }
+  //   }
+  //   setCellAddrMapping({
+  //     ...impAddress,
+  //   });
+  // }, [worksheet])
 
   const renderRow = (rowType:string='data', row: Row): ReactNode[]=>{
     const cells = [] as ReactNode[];
@@ -201,6 +221,36 @@ export default function Preview(){
           cells.push(element)
         }
       }
+    }else if(rowType === 'staffInfo'){
+      let element = null;
+      const values = row.values as CellValue[];
+
+      if(values?.length){
+        for(let i = 1; i < values.length; i++){
+          const value = values[i]?`${values[i]}`: '';
+
+          if(value){
+            // const unKnown = t('__t_Unknown');
+            // console.log('User Name:', userInfo.username, userInfo.username ?? t('__t_Unknown'));
+            if(value.includes('姓名')){
+              row.getCell(i+1).value = userInfo.username ?? t('__t_Unknown');
+
+            }else if(value.includes('客戶')){
+              // row.getCell(i).value = userInfo?.additionalInfo?.serveUnit ?
+              // t('__t_Serve_Unit', {serveUnit: userInfo.additionalInfo.serveUnit}):
+              // t('__t_Serve_Unit', {serveUnit: 'Unkown'});
+            }
+            element = (
+              <th key={`${rowType}-${value}-${i}`} className="staff-info">{value}</th>
+            )
+          }else{
+            element = (
+              <th key={`${rowType}-empty-${i}`} className="th"></th>
+            )
+          }
+          cells.push(element)
+        }
+      }
     }else{
       row.eachCell({ includeEmpty: true }, (cell, colNumber)=>{
         let element = null;
@@ -230,14 +280,14 @@ export default function Preview(){
       </button>
       <table className="worksheet">
         <thead>
-          {title?.length? title.map((row, idx)=>{
-            if((idx+1) === importantRowIdx.title){
+          {header?.length? header.map((row, idx)=>{
+            if((idx+1) === rowIdxMapping.title){
               return (
                 <tr key={`title-${idx}`}>
                   {renderRow('title', row)}
                 </tr>
               )
-            }else if((idx+1) === importantRowIdx.th){
+            }else if((idx+1) === rowIdxMapping.th){
               return (
                 <tr key={`th-${idx}`}>
                   {renderRow('th', row)}
@@ -245,8 +295,8 @@ export default function Preview(){
               )
             }else{
               return (
-                <tr key={`other-title-${idx}`}>
-                  {renderRow('', row)}
+                <tr key={`staff-info-${idx}`}>
+                  {renderRow('staffInfo', row)}
                 </tr>
               )
             }

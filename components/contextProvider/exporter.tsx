@@ -32,9 +32,6 @@ export interface IExporterContext {
   dayoff: IDayoff[];
   isProhibitedNext: boolean;
   worksheet?: Excel.Worksheet;
-  // setGeneralWorkTime?: React.Dispatch<React.SetStateAction<IGeneralWorkTime>>;
-  // setOvertime?: React.Dispatch<React.SetStateAction<IOvertime[]>>;
-  // setDayoff?: React.Dispatch<React.SetStateAction<IDayoff[]>>;
   updateGeneralWorkTime: (value: IGeneralWorkTime)=>void;
   updateOvertime: (value: IOvertime[])=>void;
   updateDayoff: (value: IDayoff[])=>void;
