@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { ref, getBytes } from 'firebase/storage';
-import { storage } from '../../pages/api/firebase/getFile';
-import { getWorksheetName, EXCEL_EXAMPLE_FILE_PATH, ALL_ROWS_LENGTH } from '../../constants';
+import { storage } from '../../../pages/api/firebase/getFile';
+import { getWorksheetName, EXCEL_EXAMPLE_FILE_PATH, ALL_ROWS_LENGTH } from '../../../constants';
 import Excel from "exceljs";
 
 // Define interfaces

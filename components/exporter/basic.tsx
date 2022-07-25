@@ -2,7 +2,7 @@ import { TimePicker, Select, InputNumber } from 'antd';
 import type { Moment } from 'moment';
 import moment from 'moment';
 import { useState, useContext, useEffect } from 'react';
-import { ExporterContext } from '../contextProvider/exporter';
+import { ExporterContext } from '../providers/context/exporter';
 import { getAllMonth } from '../../constants';
 import NumericalInput from '../numericalInput';
 import { useTranslation } from 'next-i18next';

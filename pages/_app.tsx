@@ -3,8 +3,9 @@ import 'antd/dist/antd.css';
 import type { ReactElement, ReactNode, useEffect } from 'react';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
-import { Provider } from 'react-redux';
-import  store  from '../store';
+import  StoreProvider  from '../components/providers/store';
+// import { Provider } from 'react-redux';
+// import  i18nProvider  from '../components/providers/i18n';
 import { appWithTranslation } from 'next-i18next';
 
 type NextPageWithLayout = NextPage & {
@@ -18,12 +19,12 @@ type AppPropsWithLayout = AppProps & {
 const MyApp = ({ Component, pageProps }: any) =>{
   const getLayout = Component.getLayout ?? ((page:any) => page);
   return (
-    <Provider store={store}>{
+    <StoreProvider>{
       getLayout(
         <Component {...pageProps} />
       )
     }
-    </Provider>
+    </StoreProvider>
   )
 }
 

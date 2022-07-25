@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { ExporterContext } from '../contextProvider/exporter'
+import { ExporterContext } from '../providers/context/exporter'
 import ExcelEditor from '../excelEditor/worksheet'
 
 export default function Preview(){
