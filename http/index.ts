@@ -1,5 +1,5 @@
 import { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
-import { cookieToString, neuipFilterCookieFn, jwtEncoder, jwtDecoder } from './methods';
+import { cookieToString, neuipFilterCookieFn, getNeuipSeachCondCookie, jwtEncoder, jwtDecoder } from './methods';
 import qs from 'qs';
 export * from  './methods';
 
@@ -40,10 +40,18 @@ class ConfigFactory {
 export class CNeuipRequestConfig extends ConfigFactory{
   public data: any;
 
-  constructor(path: string, method: string, cookies?: string[] | string, data?:any){
+  constructor(
+    path: string,
+    method: string,
+    cookies?: string[] | string,
+    data?:any,
+    seachCond?:any
+  ){
     let cookieStr = '';
-
     cookieStr = cookieToString(cookies, neuipFilterCookieFn);
+    if(seachCond){
+      cookieStr = cookieStr + '; ' + getNeuipSeachCondCookie(seachCond);
+    }
     super(EAPIs.Neuip, 'application/x-www-form-urlencoded', path, method, cookieStr);
     this.data = qs.stringify(data);
   }

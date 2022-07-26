@@ -45,7 +45,7 @@ export default function Row({data, indexMapping}: TRowProp){
               {/* <TimePicker
                 format={'HH:mm'}
                 minuteStep={5}
-                defaultValue={moment(`${startTime.toLocaleTimeString()}`, 'HH:mm')}
+                defaultValue={moment(`${startTime.toLocaleString('en-US', { hour12: false })()}`, 'HH:mm')}
                 disabledTime={()=>({
                   disabledHours: ()=>[0, 1, 2, 3, 4, 5, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
                 })}

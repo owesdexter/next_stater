@@ -4,6 +4,7 @@ import { ExporterContext } from '../providers/context/exporter';
 import { thKeywordMappingList, EThs, ALL_COLUMNS_LENGTH } from '../../constants';
 import { useSelector } from "react-redux";
 import { useTranslation } from 'next-i18next';
+import DataRow from './dataRow';
 
 const initRowIdxMapping = {
   title: 1,
@@ -14,7 +15,7 @@ const initRowIdxMapping = {
   signature: 39
 }
 
-type TThColIdxMapping = {
+export type TThColIdxMapping = {
   [key in EThs]: number;
 };
 
@@ -75,8 +76,8 @@ export default function Preview(){
   }
 
   const getImpColIndex = useCallback((row: Row)=>{
-    row.eachCell((row, colNumber)=>{
-      const value = renderCellText(row.value);
+    row.eachCell((cell, colNumber)=>{
+      const value = renderCellText(cell.value);
       const target = thKeywordMappingList.find(el=>value.includes(el.keyword));
       if(target){
         setColIdxMapping(pre=>({
@@ -152,35 +153,6 @@ export default function Preview(){
     setFooter(footer);
 
   }, [worksheet, getImpColIndex])
-
-  // useEffect(()=>{
-  //   if(!worksheet){
-  //     return
-  //   }
-  //   let impAddress = initImpAddress;
-
-  //   for(let i=1; i<ALL_COLUMNS_LENGTH; i++){
-  //     if(!worksheet.getColumn(i)){
-  //       continue
-  //     }
-  //     const values = worksheet.getColumn(i).values as CellValue[];
-  //     for(let j=0; j<values.length; j++){
-
-  //       if(!values.find(el=>el)){
-  //         continue
-
-  //       }else if(`${values[j]}`.includes('客戶')){
-  //         impAddress.custom = `${String.fromCharCode(i+64+2)}${j}`;
-
-  //       }else if(`${values[j]}`.includes('姓名')){
-  //         impAddress.userName = `${String.fromCharCode(i+64+2)}${j}`;
-  //       }
-  //     }
-  //   }
-  //   setCellAddrMapping({
-  //     ...impAddress,
-  //   });
-  // }, [worksheet])
 
   const renderRow = (rowType:string='data', row: Row): ReactNode[]=>{
     const cells = [] as ReactNode[];
@@ -304,9 +276,10 @@ export default function Preview(){
         </thead>
         <tbody>
           {content?.length? content.map((row, idx)=>(
-            <tr key={`content-${idx}`}>
-              {renderRow('content', row)}
-            </tr>
+            <DataRow row={row} colIdxMapping={colIdxMapping} key={`content-${idx}`}/>
+            // <tr key={`content-${idx}`}>
+            //   {renderRow('content', row)}
+            // </tr>
           )): null}
         </tbody>
       </table>

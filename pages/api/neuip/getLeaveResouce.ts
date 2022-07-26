@@ -6,6 +6,7 @@ import axios , { AxiosResponse }from 'axios';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>){
   return new Promise((resolve, reject)=>{
+    // const reqCookies = req.headers.cookie;
     const axiosConfig = new CNeuipRequestConfig(
       '/personal_leave_resource',
       'post',
@@ -16,15 +17,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     console.log(req.headers.cookie);
 
 
-    // axios({
-    //   ...axiosConfig
-    // })
-    // .then((response)=>{
-    //   console.log(response.data);
-
-    // })
-    // .catch((error)=>{
-    //   console.log(error.response.message);
-    // })
+    axios({
+      ...axiosConfig
+    })
+    .then((response)=>{
+      res.status(200).json(response.data)
+    })
+    .catch((error)=>{
+      const error_msg = error?.response?.message ? error.response.message: 'Bad Request';
+      res.status(200).json(error_msg)
+    })
   })
 }

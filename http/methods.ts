@@ -15,6 +15,16 @@ export const neuipFilterCookieFn = (key: string, value:string): string =>{
   }
 }
 
+export const getNeuipSeachCondCookie = (
+  searchIdx: number,
+  s_sn: number=0,
+  d_sn: number=25465,
+  c_sn: number=6607
+): string=>(
+  `Search_${searchIdx}_FLayer=${c_sn}; Search_${searchIdx}_SLayer=${c_sn}_${d_sn}; Search_${searchIdx}_TLayer=${c_sn}_${d_sn}_${s_sn}`
+)
+
+
 export const cookieToString = (cookies?: string[] | string, filterFn?: (key:string, value:string)=>string):string =>{
   let cookieStr = '';
   if(cookies && Array.isArray(cookies)){

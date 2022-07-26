@@ -1,6 +1,6 @@
-import { useState, useEffect, MouseEventHandler } from 'react';
+import { useState, useEffect } from 'react';
 import { ISpecialWorkTime, IOvertime } from './providers/context/exporter';
-import { IOptions, ESpecialWorkHour } from '../constants';
+import { IOptions, ESpecialWorkHour, DAILY_OVERTIME_LIMIT } from '../constants';
 import { DatePicker, Select , Input, Space } from 'antd';
 import type { Moment } from 'moment';
 import { PlusCircleOutlined } from '@ant-design/icons';
@@ -16,10 +16,12 @@ interface IWorkTimeEditorProps<T>{
   options: IOptions[];
   defaultValue: T[];
   defaultHour: number,
+  minHour?: number,
   maxHour?: number,
   weeklyMaxHour?: number,
   monthlyMaxHour?: number
   onChange: (list: T[])=>void
+  onInvalid?: (value: boolean)=>void;
 }
 
 export default function WorkTimeEditor({
@@ -27,8 +29,10 @@ export default function WorkTimeEditor({
   options,
   defaultValue,
   defaultHour,
+  minHour,
   maxHour,
-  onChange
+  onChange,
+  onInvalid
 }: IWorkTimeEditorProps<ISpecialWorkTime>){
   class CSpecialWorkTime implements ISpecialWorkTime {
     startDate = new Date();
@@ -53,7 +57,6 @@ export default function WorkTimeEditor({
       el.startDate.toLocaleDateString() === date.toLocaleDateString()
     )
   }
-
 
   const createItem = (date:Date = new Date(), counter:number=0)=>{
     const index = checkHasSameDate(date);
@@ -81,7 +84,6 @@ export default function WorkTimeEditor({
       return
     }
     if(checkHasSameDate(value.toDate())>=0){
-
       return
     }
     const arr = [...list];
@@ -147,8 +149,12 @@ export default function WorkTimeEditor({
               </Select>
               <NumericalInput
                 value={el.hour}
+                min={minHour}
                 max={maxHour}
+                maxWarningHint={`一天只能加 ${DAILY_OVERTIME_LIMIT} 小啦`}
+                minWarningHint={`拜託不要亂填`}
                 onChange={(value)=>handleHourChange(value, el, index)}
+                onInvalid={onInvalid}
               />
               <label htmlFor="">小時</label>
             </div>

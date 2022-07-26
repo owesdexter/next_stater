@@ -102,7 +102,7 @@ export enum ELeaveType {
   Vaxxed = 'vaxxed',
   Sick = 'sick',
   Personal = 'personal',
-  FamilyCare = 'familycare',
+  Familycare = 'familycare',
   Official = 'Official',
   Marriage  = 'marriage ',
   Funeral = 'funeral',

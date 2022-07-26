@@ -11,13 +11,13 @@ import { Button, message, Steps } from 'antd';
 import { useSelector } from "react-redux";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetStaticProps } from 'next';
+import { useTranslation } from 'next-i18next';
 
 const { Step } = Steps;
 
 const steps = [
   '基本',
   '加班',
-  // '請假',
   '預覽',
   '輸出',
 ]
@@ -26,6 +26,7 @@ export default function PageExporter(){
   const { isProhibitedNext } = useContext(ExporterContext);
   const [currentStep, setCurrentStep] = useState<number>(2);
   const userInfo = useSelector((state:any) => state.user);
+  const { t } = useTranslation();
 
   const next = ()=>{
     if(isProhibitedNext){
@@ -79,7 +80,7 @@ export default function PageExporter(){
           onChange={goStep}
         >
           {steps.map(item => (
-            <Step key={item} title={item} />
+            <Step key={item} title={t(item)} />
           ))}
         </Steps>
 
@@ -93,17 +94,17 @@ export default function PageExporter(){
       <div className="footer steps-action">
         {currentStep > 0 && (
           <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
-            Previous
+            {t('__t_Previous')}
           </Button>
         )}
         {currentStep < steps.length - 1 && (
           <Button type="primary" onClick={() => next()}>
-            Next
+            {t('__t_Next')}
           </Button>
         )}
         {currentStep === steps.length - 1 && (
           <Button type="primary" onClick={() => done()}>
-            Done
+            {t('__t_Done')}
           </Button>
         )}
       </div>

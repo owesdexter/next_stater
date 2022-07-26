@@ -3,42 +3,43 @@ import { ExporterContext, ISpecialWorkTime } from '../providers/context/exporter
 import DayoffEditor from '../dayoffEditor';
 import { ESpecialWorkHour, ELeaveType } from '../../constants';
 import axios from 'axios';
+import { useTranslation } from 'next-i18next';
 
 const dayoffOptions = [
   {
-    title: '特休',
+    title: '__t_Annual_leave',
     value: ELeaveType.Annual,
   },
   {
-    title: '疫苗假 (不支薪)',
+    title: '__t_Vaxxed_leave',
     value: ELeaveType.Vaxxed,
   },
   {
-    title: '病假',
+    title: '__t_Sick_leave',
     value: ELeaveType.Sick,
   },
   {
-    title: '事假',
+    title: '__t_Personal_leave',
     value: ELeaveType.Personal,
   },
   {
-    title: '家庭照顧假',
-    value: ELeaveType.FamilyCare,
+    title: '__t_Familycare_leave',
+    value: ELeaveType.Familycare,
   },
   {
-    title: '公假',
+    title: '__t_Official_leave',
     value: ELeaveType.Official,
   },
   {
-    title: '婚假',
+    title: '__t_Marriage_leave',
     value: ELeaveType.Marriage,
   },
   {
-    title: '喪假',
+    title: '__t_Funeral_leave',
     value: ELeaveType.Funeral,
   },
   {
-    title: '陪產假',
+    title: '__t_Paternity_leave',
     value: ELeaveType.Paternity,
   },
 ]
@@ -48,11 +49,12 @@ type TDayoffProps = {
  }
 
 export default function Dayoff({onInvalid}: TDayoffProps){
-  const { overtime, updateOvertime } = useContext(ExporterContext);
+  const { dayoff, updateDayoff } = useContext(ExporterContext);
   const [showMaxWarning, setShowMaxWarning] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   const handleListChange = (list:ISpecialWorkTime[])=>{
-    updateOvertime(list);
+    updateDayoff(list);
   }
 
   useEffect(()=>{
@@ -60,7 +62,7 @@ export default function Dayoff({onInvalid}: TDayoffProps){
       withCredentials: true
     })
     .then((res)=>{
-      console.log(res.data)
+      console.log(res.data);
     })
     .catch((err)=>{
       console.log(err);
@@ -71,7 +73,7 @@ export default function Dayoff({onInvalid}: TDayoffProps){
 
   return(
     <div className="basic-step-container">
-      <div className="step-title-container">新增請假</div>
+      <div className="step-title-container">{t('__t_Add_sth', {sth: t('__t_leave_section')})}</div>
       <DayoffEditor
         type={ESpecialWorkHour.Overtime}
         defaultHour={2}
