@@ -4,6 +4,7 @@ import type { ReactElement, ReactNode, useEffect } from 'react';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import  StoreProvider  from '../components/providers/store';
+import NonSSRWrapper from '../components/nonSSRWrapper';
 // import { Provider } from 'react-redux';
 // import  i18nProvider  from '../components/providers/i18n';
 import { appWithTranslation } from 'next-i18next';
@@ -19,12 +20,14 @@ type AppPropsWithLayout = AppProps & {
 const MyApp = ({ Component, pageProps }: any) =>{
   const getLayout = Component.getLayout ?? ((page:any) => page);
   return (
-    <StoreProvider>{
-      getLayout(
-        <Component {...pageProps} />
-      )
-    }
-    </StoreProvider>
+    <NonSSRWrapper>
+      <StoreProvider>{
+        getLayout(
+          <Component {...pageProps} />
+        )
+      }
+      </StoreProvider>
+    </NonSSRWrapper>
   )
 }
 

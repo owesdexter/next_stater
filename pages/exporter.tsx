@@ -1,25 +1,24 @@
+import { GetStaticProps, } from 'next';
 import { useState, useContext } from 'react';
 import type { ReactElement } from 'react';
 import Layout from '../components/layout';
 import Basic from '../components/exporter/basic';
 import Overtime from '../components/exporter/overtime';
-// import Dayoff from '../components/exporter/dayoff';
 import Preview from '../components/exporter/preview';
 import Output from '../components/exporter/output';
 import ExportContextProvider, { ExporterContext } from '../components/providers/context/exporter';
 import { Button, message, Steps } from 'antd';
 import { useSelector } from "react-redux";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { GetStaticProps } from 'next';
 import { useTranslation } from 'next-i18next';
 
 const { Step } = Steps;
 
 const steps = [
-  '基本',
-  '加班',
-  '預覽',
-  '輸出',
+  '__t_Basic',
+  '__t_Overtime',
+  '__t_Preview',
+  '__t_Export',
 ]
 
 export default function PageExporter(){
@@ -27,6 +26,10 @@ export default function PageExporter(){
   const [currentStep, setCurrentStep] = useState<number>(2);
   const userInfo = useSelector((state:any) => state.user);
   const { t } = useTranslation();
+  if(typeof window === 'undefined'){
+    return
+  }
+  console.log('exporter')
 
   const next = ()=>{
     if(isProhibitedNext){
