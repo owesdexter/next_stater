@@ -1,7 +1,6 @@
-import { GetStaticProps, } from 'next';
 import { useState, useContext } from 'react';
 import type { ReactElement } from 'react';
-import Layout from '@/components/layout';
+import Layout from '../components/layout';
 import Basic from '../components/exporter/basic';
 import Overtime from '../components/exporter/overtime';
 import Preview from '../components/exporter/preview';
@@ -9,8 +8,7 @@ import Output from '../components/exporter/output';
 import ExportContextProvider, { ExporterContext } from '../components/providers/context/exporter';
 import { Button, message, Steps } from 'antd';
 import { useSelector } from "react-redux";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'react-i18next';
 
 const { Step } = Steps;
 
@@ -122,9 +120,3 @@ PageExporter.getLayout = function getLayout(page: ReactElement) {
     </Layout>
   )
 }
-
-export const getStaticProps: GetStaticProps  = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale?? `${process.env.defaultLocale}`, ['common'])),
-  },
-});

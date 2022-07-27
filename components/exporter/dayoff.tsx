@@ -3,7 +3,7 @@ import { ExporterContext, IDayoff } from '../providers/context/exporter'
 import DayoffEditor from '../dayoffEditor';
 import { ESpecialWorkHour, ELeaveType } from '../../constants';
 import axios from 'axios';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'react-i18next';
 
 const dayoffOptions = [
   {

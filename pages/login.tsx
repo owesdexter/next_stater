@@ -1,13 +1,10 @@
-import { GetStaticProps } from 'next';
-import { useState, useEffect, MouseEventHandler } from 'react';
+import { useState, useEffect } from 'react';
 import { Input, Button, Space } from 'antd';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { userActions } from "../components/providers/store/user";
 import { useDispatch } from 'react-redux';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { useSelector } from "react-redux";
+import { useTranslation } from 'react-i18next';
 
 export default function Login(){
   const [password, setPassword] = useState<string>('');
@@ -17,7 +14,6 @@ export default function Login(){
   const { t } = useTranslation();
   const router = useRouter();
   const dispatch = useDispatch();
-  const userInfo = useSelector((state:any) => state.user);
 
   const loginAPI = ()=>{
     const data = {
@@ -50,14 +46,6 @@ export default function Login(){
     setIsLogining(true);
     loginAPI();
   }
-  // const testStore = ()=>{
-  //   console.log(userInfo)
-  //   // router.push('/');
-  // }
-  // const testRouter = ()=>{
-  //   console.log(userInfo)
-  //   router.push('/');
-  // }
 
   useEffect(()=>{
     axios('/api/neuip/preLogin')
@@ -81,25 +69,9 @@ export default function Login(){
           {t('__t_Login')}
         </Button>
       </div>
-      {/* <div>
-        <Button type="primary" loading={isLogining} onClick={testStore} suppressHydrationWarning>
-          {t('User')}
-        </Button>
-      </div>
-      <div>
-        <Button type="primary" loading={isLogining} onClick={testRouter} suppressHydrationWarning>
-          {t('Route')}
-        </Button>
-      </div> */}
       <div>
         <span>{errorMsg}</span>
       </div>
     </div>
   )
 }
-
-export const getStaticProps: GetStaticProps  = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale?? `${process.env.defaultLocale}`, ['common'])),
-  },
-});

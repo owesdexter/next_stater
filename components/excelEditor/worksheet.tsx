@@ -3,7 +3,7 @@ import type { Row, Column, CellValue, CellRichTextValue, CellFormulaValue } from
 import { ExporterContext } from '../providers/context/exporter';
 import { thKeywordMappingList, EThs, ALL_COLUMNS_LENGTH } from '../../constants';
 import { useSelector } from "react-redux";
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'react-i18next';
 import DataRow from './dataRow';
 
 const initRowIdxMapping = {

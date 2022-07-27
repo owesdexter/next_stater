@@ -5,7 +5,7 @@ import { useState, useContext, useEffect } from 'react';
 import { ExporterContext } from '../providers/context/exporter';
 import { getAllMonth } from '../../constants';
 import NumericalInput from '../numericalInput';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'react-i18next';
 
 const { Option } = Select;
 const selectableMonths = getAllMonth();
