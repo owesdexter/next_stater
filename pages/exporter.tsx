@@ -1,7 +1,7 @@
 import { GetStaticProps, } from 'next';
 import { useState, useContext } from 'react';
 import type { ReactElement } from 'react';
-import Layout from '../components/layout';
+import Layout from '@/components/layout';
 import Basic from '../components/exporter/basic';
 import Overtime from '../components/exporter/overtime';
 import Preview from '../components/exporter/preview';
