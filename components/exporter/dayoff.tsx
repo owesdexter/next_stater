@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
-import { ExporterContext, ISpecialWorkTime } from '../providers/context/exporter'
+import { ExporterContext, IDayoff } from '../providers/context/exporter'
 import DayoffEditor from '../dayoffEditor';
 import { ESpecialWorkHour, ELeaveType } from '../../constants';
 import axios from 'axios';
@@ -51,11 +51,19 @@ type TDayoffProps = {
 export default function Dayoff({onInvalid}: TDayoffProps){
   const { dayoff, updateDayoff } = useContext(ExporterContext);
   const [showMaxWarning, setShowMaxWarning] = useState<boolean>(false);
+  const [showMaxWarning, setShowMaxWarning] = useState<boolean>(false);
   const { t } = useTranslation();
 
-  const handleListChange = (list:ISpecialWorkTime[])=>{
+  const handleListChange = (list:IDayoff[])=>{
     updateDayoff(list);
   }
+
+  useEffect(()=>{
+    const total = dayoff.reduce((acc, cur)=>acc + cur.hour, 0);
+    let value = total > MONTHLY_OVERTIME_LIMIT;
+    setShowMaxWarning(value);
+    updateIsProhibitedNext(value);
+  }, [overtime, updateIsProhibitedNext]);
 
   useEffect(()=>{
     axios('/api/neuip/getLeaveResouce',{
@@ -75,7 +83,7 @@ export default function Dayoff({onInvalid}: TDayoffProps){
     <div className="basic-step-container">
       <div className="step-title-container">{t('__t_Add_sth', {sth: t('__t_leave_section')})}</div>
       <DayoffEditor
-        type={ESpecialWorkHour.Overtime}
+        type={ESpecialWorkHour.Dayoff}
         defaultHour={2}
         maxHour={8}
         options={dayoffOptions}
