@@ -51,7 +51,7 @@ type TDayoffProps = {
 export default function Dayoff({onInvalid}: TDayoffProps){
   const { dayoff, updateDayoff } = useContext(ExporterContext);
   const [showMaxWarning, setShowMaxWarning] = useState<boolean>(false);
-  const [showMaxWarning, setShowMaxWarning] = useState<boolean>(false);
+  // const [showMaxWarning, setShowMaxWarning] = useState<boolean>(false);
   const { t } = useTranslation();
 
   const handleListChange = (list:IDayoff[])=>{

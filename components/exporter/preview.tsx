@@ -12,8 +12,8 @@ export default function Preview(){
 
   return(
     <>
-      <ExcelEditor />
       Preview
+      <ExcelEditor />
     </>
   )
 }
